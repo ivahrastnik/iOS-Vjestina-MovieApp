@@ -81,7 +81,6 @@ class LogInViewController: UIViewController {
         username.layer.borderColor = lightBlue.cgColor
         username.textColor = lightBlue
         
-//        username.layer.shadowColor = shadowColor.cgColor
         username.layer.shadowColor = UIColor.black.cgColor
         username.layer.shadowOpacity = 0.5
         username.layer.shadowRadius = 3

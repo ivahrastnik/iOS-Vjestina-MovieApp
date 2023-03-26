@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return } //1
         
         window = UIWindow(windowScene: windowScene) //2
-        let vc = LogInViewController() //3
+        let vc = MovieDetailsViewController() //3
         window?.rootViewController = vc //4
         window?.makeKeyAndVisible() //5
         
