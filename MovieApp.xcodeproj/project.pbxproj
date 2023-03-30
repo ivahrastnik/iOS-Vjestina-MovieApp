@@ -17,6 +17,8 @@
 		6E61ED6529CD0C35004422CF /* Proxima Nova Font.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6E61ED6429CD0C35004422CF /* Proxima Nova Font.otf */; };
 		6E61ED6729CD1437004422CF /* FontsFree-Net-Proxima-Nova-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6E61ED6629CD1437004422CF /* FontsFree-Net-Proxima-Nova-Bold.otf */; };
 		6E61ED6929D08C91004422CF /* MovieDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E61ED6829D08C90004422CF /* MovieDetailsViewController.swift */; };
+		6E90D1B529D1CF9600300927 /* GridCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E90D1B429D1CF9600300927 /* GridCollectionViewController.swift */; };
+		6ECD564429D5A9B4000DB7FE /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 6ECD564329D5A9B4000DB7FE /* Kingfisher */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		6E61ED6429CD0C35004422CF /* Proxima Nova Font.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Proxima Nova Font.otf"; path = "../../../../../Downloads/Proxima Nova Font.otf"; sourceTree = "<group>"; };
 		6E61ED6629CD1437004422CF /* FontsFree-Net-Proxima-Nova-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "FontsFree-Net-Proxima-Nova-Bold.otf"; path = "../../../../../Downloads/FontsFree-Net-Proxima-Nova-Bold.otf"; sourceTree = "<group>"; };
 		6E61ED6829D08C90004422CF /* MovieDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailsViewController.swift; sourceTree = "<group>"; };
+		6E90D1B429D1CF9600300927 /* GridCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridCollectionViewController.swift; sourceTree = "<group>"; };
+		6EB6F04129D5C0A3004237F0 /* proximanova-extrabold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "proximanova-extrabold.otf"; path = "../../../../../Downloads/proximanova-extrabold.otf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6ECD564429D5A9B4000DB7FE /* Kingfisher in Frameworks */,
 				6E0C904829CCA90E00DCEE6E /* PureLayout in Frameworks */,
 				6E0C904529CCA8E600DCEE6E /* MovieAppData in Frameworks */,
 			);
@@ -72,6 +77,7 @@
 				6E0C903D29CCA8BD00DCEE6E /* Info.plist */,
 				6E0C904929CCF6FC00DCEE6E /* LogInViewController.swift */,
 				6E61ED6829D08C90004422CF /* MovieDetailsViewController.swift */,
+				6E90D1B429D1CF9600300927 /* GridCollectionViewController.swift */,
 			);
 			path = MovieApp;
 			sourceTree = "<group>";
@@ -79,6 +85,7 @@
 		6E61ED6129CD0B9F004422CF /* fonts */ = {
 			isa = PBXGroup;
 			children = (
+				6EB6F04129D5C0A3004237F0 /* proximanova-extrabold.otf */,
 				6E61ED6629CD1437004422CF /* FontsFree-Net-Proxima-Nova-Bold.otf */,
 				6E61ED6429CD0C35004422CF /* Proxima Nova Font.otf */,
 			);
@@ -104,6 +111,7 @@
 			packageProductDependencies = (
 				6E0C904429CCA8E600DCEE6E /* MovieAppData */,
 				6E0C904729CCA90E00DCEE6E /* PureLayout */,
+				6ECD564329D5A9B4000DB7FE /* Kingfisher */,
 			);
 			productName = MovieApp;
 			productReference = 6E0C902C29CCA8BB00DCEE6E /* MovieApp.app */;
@@ -136,6 +144,7 @@
 			packageReferences = (
 				6E0C904329CCA8E600DCEE6E /* XCRemoteSwiftPackageReference "MovieAppData" */,
 				6E0C904629CCA90E00DCEE6E /* XCRemoteSwiftPackageReference "PureLayout" */,
+				6ECD564229D5A9B4000DB7FE /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = 6E0C902D29CCA8BB00DCEE6E /* Products */;
 			projectDirPath = "";
@@ -167,6 +176,7 @@
 			files = (
 				6E61ED6929D08C91004422CF /* MovieDetailsViewController.swift in Sources */,
 				6E0C903029CCA8BB00DCEE6E /* AppDelegate.swift in Sources */,
+				6E90D1B529D1CF9600300927 /* GridCollectionViewController.swift in Sources */,
 				6E0C903229CCA8BB00DCEE6E /* SceneDelegate.swift in Sources */,
 				6E0C904A29CCF6FC00DCEE6E /* LogInViewController.swift in Sources */,
 			);
@@ -394,6 +404,14 @@
 				minimumVersion = 3.0.0;
 			};
 		};
+		6ECD564229D5A9B4000DB7FE /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -406,6 +424,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6E0C904629CCA90E00DCEE6E /* XCRemoteSwiftPackageReference "PureLayout" */;
 			productName = PureLayout;
+		};
+		6ECD564329D5A9B4000DB7FE /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6ECD564229D5A9B4000DB7FE /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
