@@ -68,8 +68,6 @@ class MovieDetailsViewController: UIViewController {
         imgView = UIImageView()
         imgView.kf.setImage(with: URL(string: details.imageUrl))
         
-        print(details)
-        
         movieView1 = UIView()
         movieView1.addSubview(imgView)
         view.addSubview(movieView1)
