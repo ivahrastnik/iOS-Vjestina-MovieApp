@@ -9,6 +9,16 @@ public let details = MovieUseCase().getDetails(id: 111161)!
 public var i = 0
 public var myCollectionView: UICollectionView!
 
+// Screen width.
+public var screenWidth: CGFloat {
+    return UIScreen.main.bounds.width
+}
+
+// Screen height.
+public var screenHeight: CGFloat {
+    return UIScreen.main.bounds.height
+}
+
 class MovieDetailsViewController: UIViewController {
         
     private var movieView1: UIView!
@@ -51,12 +61,17 @@ class MovieDetailsViewController: UIViewController {
         iconView.clipsToBounds = true
     }
     
-//    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-//        super.viewWillTransition(to: size, with: coordinator)
-//        myCollectionView.reloadData()
-////        myCollectionView.collectionViewLayout.reloadData()
-//    }
-    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+            super.viewWillTransition(to: size, with: coordinator)
+            if UIDevice.current.orientation.isLandscape {
+                view.subviews.forEach({ $0.removeFromSuperview() })
+                buildViews()
+
+            } else {
+                view.subviews.forEach({ $0.removeFromSuperview() })
+                buildViews()
+            }
+    }
     private func buildViews() {
         createViews()
         styleViews()
@@ -114,8 +129,6 @@ class MovieDetailsViewController: UIViewController {
         textBox = UILabel()
         movieView2.addSubview(textBox)
         
-//        createCollection()
-        
         collectionBox = UIView()
         movieView2.addSubview(collectionBox)
 
@@ -128,31 +141,6 @@ class MovieDetailsViewController: UIViewController {
 
         
     }
-    
-//    private func createCollection(){
-//
-////        i = 0
-//
-//        collectionBox = UIView()
-//        movieView2.addSubview(collectionBox)
-//
-//        let flowLayout = UICollectionViewFlowLayout()
-//        flowLayout.scrollDirection = .vertical
-//        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-////        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-////        flowLayout.minimumInteritemSpacing = 0
-//        flowLayout.minimumLineSpacing = 24
-//
-//
-//        let collectionView = UICollectionView(
-//        frame: CGRect( x: 0, y: 0, width: view.bounds.width, height: view.bounds.height), collectionViewLayout: flowLayout)
-//        collectionView.backgroundColor = .white
-//        collectionBox.addSubview(collectionView)
-//        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
-//        collectionView.dataSource = self
-//        collectionView.delegate = self
-//
-//    }
     
     private func styleViews() {
         
@@ -178,7 +166,7 @@ class MovieDetailsViewController: UIViewController {
         score.text = NumberFormatter.localizedString(from: NSNumber(value: details.rating ), number: .decimal)
         
         scoreLabel.textColor = .white
-        scoreLabel.font = UIFont(name: "ProximaNova-Regular", size: 14) //semibold
+        scoreLabel.font = UIFont(name: "ProximaNova-Bold", size: 14) //semibold
         scoreLabel.text = "User score"
         
         titleText.font = UIFont(name: "ProximaNova-Bold", size: 22)
@@ -225,7 +213,6 @@ class MovieDetailsViewController: UIViewController {
         durationText.textColor = .white
         durationText.font = UIFont(name: "ProximaNova-Bold", size: 14)
         
-        let radius = iconView.layer.bounds.width / 2
         iconView.backgroundColor = UIColor(red: 0.459, green: 0.459, blue: 0.459, alpha: 1)
         
         
@@ -248,12 +235,16 @@ class MovieDetailsViewController: UIViewController {
     
     private func defineLayoutForViews(){
         
-        movieView1.autoSetDimension(.height, toSize: 327)
+        //        if UIDevice.current.orientation.isLandscape {}
+        
+            
+        movieView1.autoSetDimension(.height, toSize: (327/852)*screenHeight)
+//        movieView1.autoSetDimension(.height, toSize: 327)
         movieView1.autoPinEdge(toSuperviewEdge: .top)
         movieView1.autoPinEdge(toSuperviewEdge: .leading)
         movieView1.autoPinEdge(toSuperviewEdge: .trailing)
+        imgView.autoMatch(.height, to: .height, of: movieView1)
         
-        imgView.autoSetDimension(.height, toSize: 327)
         imgView.contentMode = .scaleAspectFill
         imgView.autoPinEdge(toSuperviewEdge: .top)
         imgView.autoPinEdge(toSuperviewEdge: .leading)
@@ -276,7 +267,6 @@ class MovieDetailsViewController: UIViewController {
         titleLabel.autoPinEdge(.top, to: .bottom, of: userScoreView, withOffset: 16)
         titleLabel.autoPinEdge(.leading, to: .leading, of: userScoreView)
         
-//        titleText.autoPinEdge(toSuperviewSafeArea: .leading)
         titleText.autoPinEdge(toSuperviewEdge: .leading)
         titleText.autoPinEdge(toSuperviewEdge: .bottom)
         titleText.autoPinEdge(toSuperviewEdge: .top)
@@ -310,7 +300,7 @@ class MovieDetailsViewController: UIViewController {
         iconImage.autoSetDimension(.width, toSize: 14)
         iconImage.autoCenterInSuperview()
         
-        movieView2.autoSetDimension(.height, toSize: 500)
+        movieView2.autoPinEdge(toSuperviewEdge: .bottom)
         movieView2.autoPinEdge(.top, to: .bottom, of: movieView1)
         movieView2.autoPinEdge(toSuperviewEdge: .leading)
         movieView2.autoPinEdge(toSuperviewEdge: .trailing)
@@ -376,6 +366,10 @@ extension MovieDetailsViewController: UICollectionViewDataSource {
         
         print(String(details.crewMembers[i].name))
         i += 1
+        
+        if(i == details.crewMembers.count) {
+            i = 0
+        }
         return cell
         
     }
@@ -395,11 +389,6 @@ extension MovieDetailsViewController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: width, height: 40)
         
     }
-    
-//    override func viewDidLayoutSubviews() {
-//        super.viewDidLayoutSubviews()
-//        MovieApp.collectionView.collectionViewLayout.collectionView?.reloadData()
-//    }
     
 }
 
