@@ -17,6 +17,7 @@ class MovieListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(allMovies.count)
         buildViews()
     }
     
@@ -89,11 +90,12 @@ extension MovieListViewController: UICollectionViewDataSource {
         return 1
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return allMovies.count
+        return 70
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell( withReuseIdentifier: cellIdentifier,
                                                        for: indexPath)
+//        OVERRIDE PREPAREFORREUSE
         cell.backgroundColor = .white
         cell.layer.cornerRadius = 10
         cell.layer.shadowPath = UIBezierPath(roundedRect: cell.bounds, cornerRadius: 10).cgPath
@@ -120,10 +122,13 @@ extension MovieListViewController: UICollectionViewDataSource {
         let nameView = UILabel()
         let summaryView = UILabel()
         
-//        String str = movie.name
+        var str = movie.name
+        let year = (MovieUseCase().getDetails(id: movie.id)?.year)!
+        str += " ("
+        str += NumberFormatter.localizedString(from: NSNumber(value: year), number: .none)
+        str += ")"
         
-        nameView.text = String(movie.name)
-//        summaryView.text = String(movie.summary)
+        nameView.text = str
         
         nameView.textColor = .black
         nameView.font = UIFont(name: "ProximaNova-Bold", size: 16)
@@ -149,7 +154,7 @@ extension MovieListViewController: UICollectionViewDataSource {
         summaryView.autoPinEdge(toSuperviewEdge: .trailing, withInset: 12)
         summaryView.autoPinEdge(.leading, to: .trailing, of: imgView, withOffset: 16)
         summaryView.autoPinEdge(.top, to: .bottom, of: nameView, withOffset: 8)
-        summaryView.autoPinEdge(toSuperviewEdge: .bottom, withInset: 8)
+        summaryView.autoPinEdge(toSuperviewSafeArea: .bottom, withInset: 8)
         
         i += 1
         
@@ -174,90 +179,3 @@ extension MovieListViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-//extension MovieListViewController: UITableViewDataSource {
-//
-//    func numberOfSections(in tableView: UITableView) -> Int {
-//        return 1
-//    }
-//
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return 100
-//    }
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell: UITableViewCell = tableView.dequeueReusableCell(
-//            withIdentifier: cellIdentifier,
-//            for: indexPath)
-//
-//        var cellConfig: UIListContentConfiguration = cell.defaultContentConfiguration() // 5.
-//
-//        cell.backgroundColor = .white
-//        cell.layer.cornerRadius = 10
-//        cell.layer.shadowPath = UIBezierPath(roundedRect: cell.bounds, cornerRadius: 10).cgPath
-//        cell.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.1).cgColor
-//        cell.layer.shadowRadius = 20
-//        cell.layer.shadowOpacity = 1
-//        cell.layer.shadowOffset = CGSize(width: 0, height: 4)
-//        cell.layer.position = cell.center
-//
-//        let movie = allMovies[i]
-//
-//        let imgView = UIImageView()
-//        imgView.kf.setImage(with: URL(string: movie.imageUrl))
-//        imgView.layer.cornerRadius = 10
-//        imgView.clipsToBounds = true
-//        imgView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
-//
-//        cell.addSubview(imgView)
-//        imgView.autoSetDimension(.width, toSize: 97)
-//        imgView.autoPinEdge(toSuperviewEdge: .top)
-//        imgView.autoPinEdge(toSuperviewEdge: .bottom)
-//        imgView.autoPinEdge(toSuperviewEdge: .leading)
-//
-//        let nameView = UILabel()
-//        let summaryView = UILabel()
-//
-//        //        String str = movie.name
-//
-//        nameView.text = String(movie.name)
-//        summaryView.text = String(movie.summary)
-//
-//        nameView.textColor = .black
-//        nameView.font = UIFont(name: "ProximaNova-Bold", size: 16)
-//        nameView.textAlignment = .left
-//
-//        summaryView.textColor = .black
-//        summaryView.font = UIFont(name: "ProximaNova-Regular", size: 14)
-//        summaryView.textAlignment = .left
-//
-//        cell.addSubview(nameView)
-//        cell.addSubview(summaryView)
-//
-//        nameView.autoSetDimension(.height, toSize: 20)
-//        nameView.autoPinEdge(toSuperviewEdge: .top, withInset: 12)
-//        nameView.autoPinEdge(.leading, to: .trailing, of: imgView, withOffset: 16)
-//        nameView.autoPinEdge(toSuperviewSafeArea: .trailing)
-//
-//        i += 1
-//
-//        if(i == allMovies.count) {
-//            i = 0
-//        }
-//
-//        //        let cellView = UIView()
-//        //        cell.addSubview(cellView)
-//        //        cellView.autoSetDimension(.height, toSize: 142)
-//        //        cellView.autoSetDimension(.width, toSize: 358)
-//        //        cellView.autoPinEdge(toSuperviewEdge: .leading, withInset: 16)
-//        //        cellView.layer.cornerRadius = 10
-//        //        cell.con
-//        //
-//        //        cellConfig.text = "Row \(indexPath.row)"
-//        //        cellConfig.textProperties.color = .blue
-//        //        cell.contentConfiguration = cellConfig
-//        return cell
-//    }
-    
-    //    func styleCell() {
-    //
-    //    }
-//}
