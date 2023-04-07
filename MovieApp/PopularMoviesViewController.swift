@@ -15,6 +15,7 @@ class PopularMoviesViewController: UIViewController {
     private var trendingCollectionView: UICollectionView!
     
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -24,7 +25,7 @@ class PopularMoviesViewController: UIViewController {
         y: 0,
         width: view.bounds.width, height: view.bounds.height))
         view.addSubview(tableView)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier) // 1.
+//        tableView.register(collectionCell.self, forCellReuseIdentifier: cellIdentifier) // 1.
         tableView.dataSource = self // 2.
         
         buildViews()
@@ -32,26 +33,17 @@ class PopularMoviesViewController: UIViewController {
     }
     
     private func buildViews() {
-        createViews()
+//        createViews()
 //        styleViews()
-//        defineLayoutForViews()
+        defineLayoutForViews()
     }
     
-    private func createViews() {
+    private func defineLayoutForViews() {
         
-//        popularCollectionView = UICollectionView()
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.scrollDirection = .vertical
-        
-        popularCollectionView = UICollectionView(
-            frame: CGRect( x: 0,
-                           y: 0,
-                           width: view.bounds.width/3, height: view.bounds.height/3),
-            collectionViewLayout: flowLayout)
-        popularCollectionView.backgroundColor = .systemMint
-        tableView(tableView, cellForRowAt: IndexPath.init(row: 0, section: 0)).addSubview(popularCollectionView)
-        freeCollectionView = UICollectionView()
-        trendingCollectionView = UICollectionView()
+        tableView.autoPinEdge(toSuperviewEdge: .bottom)
+        tableView.autoPinEdge(toSuperviewEdge: .leading)
+        tableView.autoPinEdge(toSuperviewEdge: .trailing)
+        tableView.autoPinEdge(toSuperviewEdge: .top, withInset: 24)
         
     }
 }
@@ -64,26 +56,37 @@ extension PopularMoviesViewController: UITableViewDataSource { // 3.
         return 3
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) // 4.
-        var cellConfig: UIListContentConfiguration = cell.defaultContentConfiguration() // 5.
-        cellConfig.text = "Row \(indexPath.row)"
-        cellConfig.textProperties.color = .blue
-        cell.contentConfiguration = cellConfig
+//        let cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) // 4.
+//        var cellConfig: UIListContentConfiguration = cell.defaultContentConfiguration() // 5.
         
-        let movie = allMovies[indexPath.row]
+        self.tableView.register(collectionCell.self, forCellReuseIdentifier: "collectionCell")
+        self.tableView.rowHeight = self.view.bounds.height / 3
         
-        let imgView = UIImageView()
-        imgView.kf.setImage(with: URL(string: movie.imageUrl))
-        imgView.layer.cornerRadius = 10
-        imgView.clipsToBounds = true
-        imgView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: collectionCell.reuseIdentifier, for: indexPath)
+                as? collectionCell,
+            3 > indexPath.item
+                
+        else { return UITableViewCell() }
+        print("DEBUG: cellForItemAt: \(indexPath)")
         
-        cell.addSubview(imgView)
-        imgView.autoSetDimension(.width, toSize: 97)
-        imgView.autoPinEdge(toSuperviewEdge: .top)
-        imgView.autoPinEdge(toSuperviewEdge: .bottom)
-        imgView.autoPinEdge(toSuperviewEdge: .leading)
-        self.tableView.rowHeight = view.bounds.height / 3
+        
+//
+//        cellConfig.text = "Row \(indexPath.row)"
+//        cellConfig.textProperties.color = .blue
+//        cell.contentConfiguration = cellConfig
+//        if (indexPath.row == 0) {
+//            movieCategory = MovieUseCase().popularMovies
+//            cell.setTitle(title: "What's popular")
+//        } else if (indexPath.row == 1) {
+//            movieCategory = MovieUseCase().freeToWatchMovies
+//            cell.setTitle(title: "Free to watch")
+//        } else {
+//            movieCategory = MovieUseCase().trendingMovies
+//            cell.setTitle(title: "Trending")
+//        }
+        
+        cell.setCollectionCell(rowId: indexPath.row)
+        
         
         return cell
     }

@@ -340,8 +340,6 @@ extension MovieDetailsViewController: UICollectionViewDataSource {
         return Int(details.crewMembers.count)
     }
     
-    
-    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         self.collectionView.register(personCell.self, forCellWithReuseIdentifier: "personCell")
         
