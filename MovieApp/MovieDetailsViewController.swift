@@ -6,7 +6,6 @@ import Kingfisher
 
 public let details = MovieUseCase().getDetails(id: 111161)!
 
-public var i = 0
 public var myCollectionView: UICollectionView!
 
 // Screen width.
@@ -20,6 +19,9 @@ public var screenHeight: CGFloat {
 }
 
 class MovieDetailsViewController: UIViewController {
+    
+    private var scrollView: UIScrollView!
+    private var contentView: UIView!
         
     private var movieView1: UIView!
     private var movieView2: UIView!
@@ -61,17 +63,17 @@ class MovieDetailsViewController: UIViewController {
         iconView.clipsToBounds = true
     }
     
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-            super.viewWillTransition(to: size, with: coordinator)
-            if UIDevice.current.orientation.isLandscape {
-                view.subviews.forEach({ $0.removeFromSuperview() })
-                buildViews()
-
-            } else {
-                view.subviews.forEach({ $0.removeFromSuperview() })
-                buildViews()
-            }
-    }
+//    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+//            super.viewWillTransition(to: size, with: coordinator)
+//            if UIDevice.current.orientation.isLandscape {
+//                view.subviews.forEach({ $0.removeFromSuperview() })
+//                buildViews()
+//
+//            } else {
+//                view.subviews.forEach({ $0.removeFromSuperview() })
+//                buildViews()
+//            }
+//    }
     private func buildViews() {
         createViews()
         styleViews()
@@ -80,12 +82,17 @@ class MovieDetailsViewController: UIViewController {
     
     private func createViews(){
         
+        scrollView = UIScrollView()
+        view.addSubview(scrollView)
+        contentView = UIView()
+        scrollView.addSubview(contentView)
+        
         imgView = UIImageView()
         imgView.kf.setImage(with: URL(string: details.imageUrl))
         
         movieView1 = UIView()
         movieView1.addSubview(imgView)
-        view.addSubview(movieView1)
+        scrollView.addSubview(movieView1)
         
         userScoreView = UIView()
         movieView1.addSubview(userScoreView)
@@ -120,36 +127,32 @@ class MovieDetailsViewController: UIViewController {
         iconView.addSubview(iconImage)
         
         movieView2 = UIView()
-        view.addSubview(movieView2)
+        scrollView.addSubview(movieView2)
         
         label = UILabel()
         movieView2.addSubview(label)
-        label.text = "Overview"
         
         textBox = UILabel()
         movieView2.addSubview(textBox)
-        
-        collectionBox = UIView()
-        movieView2.addSubview(collectionBox)
 
         flowLayout = UICollectionViewFlowLayout()
         
-        collectionView = UICollectionView(
-        frame: CGRect( x: 0, y: 0, width: view.bounds.width, height: view.bounds.height), collectionViewLayout: flowLayout)
-        collectionBox.addSubview(collectionView)
-        
-
-        
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        movieView2.addSubview(collectionView)
     }
     
     private func styleViews() {
         
+        contentView.backgroundColor = .white
+        scrollView.backgroundColor = .white
         movieView1.backgroundColor = .white
         movieView2.backgroundColor = .white
         
         label.textColor = .black
         label.font = UIFont(name: "ProximaNova-Bold", size: 20)
         label.textAlignment = .left
+        label.text = "Overview"
+        label.backgroundColor = .white
         
         textBox.textColor = .black
         textBox.font = UIFont(name: "ProximaNova-Regular", size: 14)
@@ -229,17 +232,19 @@ class MovieDetailsViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         
-        
-        
     }
     
     private func defineLayoutForViews(){
         
         //        if UIDevice.current.orientation.isLandscape {}
-        
+//        scrollView.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .bottom)
+        scrollView.autoPinEdgesToSuperviewEdges()
+        contentView.autoPinEdge(toSuperviewEdge: .top)
+        contentView.autoPinEdge(toSuperviewEdge: .bottom)
+        contentView.autoPinEdge(.leading, to: .leading, of: view)
+        contentView.autoPinEdge(.trailing, to: .trailing, of: view)
             
         movieView1.autoSetDimension(.height, toSize: (327/852)*screenHeight)
-//        movieView1.autoSetDimension(.height, toSize: 327)
         movieView1.autoPinEdge(toSuperviewEdge: .top)
         movieView1.autoPinEdge(toSuperviewEdge: .leading)
         movieView1.autoPinEdge(toSuperviewEdge: .trailing)
@@ -249,6 +254,7 @@ class MovieDetailsViewController: UIViewController {
         imgView.autoPinEdge(toSuperviewEdge: .top)
         imgView.autoPinEdge(toSuperviewEdge: .leading)
         imgView.autoPinEdge(toSuperviewEdge: .trailing)
+        imgView.autoPinEdge(toSuperviewEdge: .bottom)
         
         userScoreView.autoPinEdge(toSuperviewSafeArea: .top, withInset: 75)
         userScoreView.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 20)
@@ -313,9 +319,11 @@ class MovieDetailsViewController: UIViewController {
         textBox.autoPinEdge(toSuperviewEdge: .leading, withInset: 16)
         textBox.autoPinEdge(toSuperviewEdge: .trailing, withInset: 16)
         
-        collectionBox.autoPinEdge(.top, to: .bottom, of: textBox, withOffset: 27.62)
-        collectionBox.autoPinEdge(toSuperviewEdge: .leading)
-        collectionBox.autoPinEdge(toSuperviewEdge: .trailing)
+        collectionView.autoPinEdge(.top, to: .bottom, of: textBox, withOffset: 27.62)
+        collectionView.autoPinEdge(toSuperviewEdge: .leading)
+        collectionView.autoPinEdge(toSuperviewEdge: .trailing)
+        collectionView.autoSetDimension(.height, toSize: 84)
+        collectionView.autoPinEdge(toSuperviewEdge: .bottom)
         
     }
     
@@ -333,43 +341,20 @@ extension MovieDetailsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return Int(details.crewMembers.count)
     }
+    
+    
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell( withReuseIdentifier: cellIdentifier,
-                                                       for: indexPath)
-        cell.backgroundColor = .white
+        self.collectionView.register(personCell.self, forCellWithReuseIdentifier: "personCell")
         
-        let nameView = UILabel()
-        let roleView = UILabel()
-        
-        nameView.text = String(details.crewMembers[i].name)
-        roleView.text = String(details.crewMembers[i].role)
-        
-        nameView.textColor = .black
-        nameView.font = UIFont(name: "ProximaNova-Bold", size: 14)
-        nameView.textAlignment = .left
-        
-        roleView.textColor = .black
-        roleView.font = UIFont(name: "ProximaNova-Regular", size: 14)
-        roleView.textAlignment = .left
-        
-        cell.addSubview(nameView)
-        cell.addSubview(roleView)
-        
-        
-        nameView.autoSetDimension(.height, toSize: 20)
-        roleView.autoSetDimension(.height, toSize: 20)
-        
-        nameView.autoPinEdge(toSuperviewEdge: .top)
-        nameView.autoPinEdge(toSuperviewEdge: .leading)
-        roleView.autoPinEdge(.top, to: .bottom, of: nameView)
-        roleView.autoPinEdge(.leading, to: .leading, of: nameView)
-        
-        print(String(details.crewMembers[i].name))
-        i += 1
-        
-        if(i == details.crewMembers.count) {
-            i = 0
-        }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: personCell.reuseIdentifier, for: indexPath)
+                as? personCell,
+            details.crewMembers.count > indexPath.item
+                
+        else { return UICollectionViewCell() }
+//        print("DEBUG: cellForItemAt: \(indexPath)")
+        cell.setName(name: String(details.crewMembers[indexPath.row].name))
+        cell.setRole(role: String(details.crewMembers[indexPath.row].role))
         return cell
         
     }

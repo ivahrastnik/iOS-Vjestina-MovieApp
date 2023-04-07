@@ -49,8 +49,6 @@ class MovieListViewController: UIViewController {
         scrollView = UIScrollView()
         view.addSubview(scrollView)
         
-        i = 0
-        
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .vertical
         
@@ -105,7 +103,7 @@ extension MovieListViewController: UICollectionViewDataSource {
         cell.layer.shadowOffset = CGSize(width: 0, height: 4)
         cell.layer.position = cell.center
         
-        let movie = allMovies[i]
+        let movie = allMovies[indexPath.row]
         
         let imgView = UIImageView()
         imgView.kf.setImage(with: URL(string: movie.imageUrl))
@@ -155,12 +153,6 @@ extension MovieListViewController: UICollectionViewDataSource {
         summaryView.autoPinEdge(.leading, to: .trailing, of: imgView, withOffset: 16)
         summaryView.autoPinEdge(.top, to: .bottom, of: nameView, withOffset: 8)
         summaryView.autoPinEdge(toSuperviewSafeArea: .bottom, withInset: 8)
-        
-        i += 1
-        
-        if(i == allMovies.count) {
-            i = 0
-        }
         
         return cell
     }

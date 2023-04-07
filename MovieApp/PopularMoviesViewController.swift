@@ -18,8 +18,6 @@ class PopularMoviesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        i = 0
-        
         view.backgroundColor = .white
         tableView = UITableView(
         frame: CGRect( x: 0,
@@ -72,7 +70,7 @@ extension PopularMoviesViewController: UITableViewDataSource { // 3.
         cellConfig.textProperties.color = .blue
         cell.contentConfiguration = cellConfig
         
-        let movie = allMovies[i]
+        let movie = allMovies[indexPath.row]
         
         let imgView = UIImageView()
         imgView.kf.setImage(with: URL(string: movie.imageUrl))
