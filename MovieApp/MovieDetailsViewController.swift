@@ -165,11 +165,11 @@ class MovieDetailsViewController: UIViewController {
         textBox.attributedText = NSMutableAttributedString(string: details.summary, attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
         
         score.textColor = .white
-        score.font = UIFont(name: "ProximaNova-Bold", size: 16) //EXTRABOLD
+        score.font = UIFont(name: "ProximaNova-ExtraBold", size: 16) //EXTRABOLD
         score.text = NumberFormatter.localizedString(from: NSNumber(value: details.rating ), number: .decimal)
         
         scoreLabel.textColor = .white
-        scoreLabel.font = UIFont(name: "ProximaNova-Bold", size: 14) //semibold
+        scoreLabel.font = UIFont(name: "ProximaNova-SemiBold", size: 14) //semibold
         scoreLabel.text = "User score"
         
         titleText.font = UIFont(name: "ProximaNova-Bold", size: 22)
@@ -236,8 +236,6 @@ class MovieDetailsViewController: UIViewController {
     
     private func defineLayoutForViews(){
         
-        //        if UIDevice.current.orientation.isLandscape {}
-//        scrollView.autoPinEdgesToSuperviewEdges(with: .zero, excludingEdge: .bottom)
         scrollView.autoPinEdgesToSuperviewEdges()
         contentView.autoPinEdge(toSuperviewEdge: .top)
         contentView.autoPinEdge(toSuperviewEdge: .bottom)

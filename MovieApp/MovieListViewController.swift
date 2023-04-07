@@ -9,15 +9,13 @@ let allMovies = MovieUseCase().allMovies
 
 class MovieListViewController: UIViewController {
     
-    private var scrollView: UIScrollView!
-    private var tableView: UITableView!
+//    private var scrollView: UIScrollView!
     private var collectionView: UICollectionView!
     
     let cellIdentifier = "cellId"
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(allMovies.count)
         buildViews()
     }
     
@@ -46,16 +44,14 @@ class MovieListViewController: UIViewController {
 
     private func createViews() {
 
-        scrollView = UIScrollView()
-        view.addSubview(scrollView)
+//        scrollView = UIScrollView()
+//        view.addSubview(scrollView)
         
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .vertical
         
         collectionView = UICollectionView(
-            frame: CGRect( x: 0,
-                           y: 0,
-                           width: view.bounds.width, height: view.bounds.height),
+            frame: .zero,
             collectionViewLayout: flowLayout)
         
         view.addSubview(collectionView)
@@ -65,19 +61,24 @@ class MovieListViewController: UIViewController {
     
     private func styleViews() {
 
-        scrollView.backgroundColor = .white
-        collectionView.backgroundColor = .white
         view.backgroundColor = .white
-        
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        collectionView.backgroundColor = .white
         collectionView.dataSource = self
         collectionView.delegate = self
     }
 
     private func defineLayoutForViews() {
 
-        scrollView.autoPinEdgesToSuperviewEdges()
-        collectionView.autoPinEdgesToSuperviewSafeArea()
+//        collectionView.autoPinEdgesToSuperviewEdges()
+        collectionView.autoPinEdge(toSuperviewEdge: .top)
+        collectionView.autoPinEdge(toSuperviewEdge: .bottom)
+        collectionView.autoPinEdge(toSuperviewSafeArea: .leading)
+        collectionView.autoPinEdge(toSuperviewSafeArea: .trailing)
+//        collectionView.autoPinEdge(toSuperviewEdge: .top)
+//        collectionView.autoPinEdge(toSuperviewEdge: .leading)
+//        collectionView.autoPinEdge(toSuperviewEdge: .trailing)
+//        collectionView.autoSetDimension(.height, toSize: 84)
+//        collectionView.autoPinEdge(toSuperviewEdge: .bottom)
 
     }
     
@@ -88,71 +89,29 @@ extension MovieListViewController: UICollectionViewDataSource {
         return 1
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 70
+        return allMovies.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell( withReuseIdentifier: cellIdentifier,
-                                                       for: indexPath)
-//        OVERRIDE PREPAREFORREUSE
-        cell.backgroundColor = .white
-        cell.layer.cornerRadius = 10
-        cell.layer.shadowPath = UIBezierPath(roundedRect: cell.bounds, cornerRadius: 10).cgPath
-        cell.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.1).cgColor
-        cell.layer.shadowRadius = 20
-        cell.layer.shadowOpacity = 1
-        cell.layer.shadowOffset = CGSize(width: 0, height: 4)
-        cell.layer.position = cell.center
+        
+        self.collectionView.register(listCell.self, forCellWithReuseIdentifier: "listCell")
+        
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: listCell.reuseIdentifier, for: indexPath)
+                as? listCell,
+              allMovies.count > indexPath.item
+        else { return UICollectionViewCell() }
+        print("DEBUG: cellForItemAt: \(indexPath)")
         
         let movie = allMovies[indexPath.row]
+        cell.setImage(imageUrl: movie.imageUrl)
         
-        let imgView = UIImageView()
-        imgView.kf.setImage(with: URL(string: movie.imageUrl))
-        imgView.layer.cornerRadius = 10
-        imgView.clipsToBounds = true
-        imgView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
-        
-        cell.addSubview(imgView)
-        imgView.autoSetDimension(.width, toSize: 97)
-        imgView.autoPinEdge(toSuperviewEdge: .top)
-        imgView.autoPinEdge(toSuperviewEdge: .bottom)
-        imgView.autoPinEdge(toSuperviewEdge: .leading)
-        
-        let nameView = UILabel()
-        let summaryView = UILabel()
-        
-        var str = movie.name
+        var wholeName = movie.name
         let year = (MovieUseCase().getDetails(id: movie.id)?.year)!
-        str += " ("
-        str += NumberFormatter.localizedString(from: NSNumber(value: year), number: .none)
-        str += ")"
+        wholeName += " ("
+        wholeName += NumberFormatter.localizedString(from: NSNumber(value: year), number: .none)
+        wholeName += ")"
         
-        nameView.text = str
-        
-        nameView.textColor = .black
-        nameView.font = UIFont(name: "ProximaNova-Bold", size: 16)
-        nameView.textAlignment = .left
-        
-        summaryView.textColor = .black
-        summaryView.font = UIFont(name: "ProximaNova-Regular", size: 14)
-        summaryView.textAlignment = .left
-        summaryView.numberOfLines = 0
-        summaryView.lineBreakMode = .byWordWrapping
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineHeightMultiple = 1.4
-        summaryView.attributedText = NSMutableAttributedString(string: movie.summary, attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
-        
-        cell.addSubview(nameView)
-        cell.addSubview(summaryView)
-        
-        nameView.autoSetDimension(.height, toSize: 20)
-        nameView.autoPinEdge(toSuperviewEdge: .top, withInset: 12)
-        nameView.autoPinEdge(.leading, to: .trailing, of: imgView, withOffset: 16)
-        nameView.autoPinEdge(toSuperviewSafeArea: .trailing)
-        
-        summaryView.autoPinEdge(toSuperviewEdge: .trailing, withInset: 12)
-        summaryView.autoPinEdge(.leading, to: .trailing, of: imgView, withOffset: 16)
-        summaryView.autoPinEdge(.top, to: .bottom, of: nameView, withOffset: 8)
-        summaryView.autoPinEdge(toSuperviewSafeArea: .bottom, withInset: 8)
+        cell.setName(name: movie.name)
+        cell.setSummary(summary: movie.summary)
         
         return cell
     }
@@ -167,7 +126,9 @@ extension MovieListViewController: UICollectionViewDelegate {
 extension MovieListViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout:
                         UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 358, height: 142)
+        let emptySpace = 2*16
+        let width = (Int(collectionView.frame.width) - emptySpace)
+        return CGSize(width: width, height: 142)
     }
 }
 

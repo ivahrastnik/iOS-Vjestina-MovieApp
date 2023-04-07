@@ -1,0 +1,104 @@
+import UIKit
+import PureLayout
+import Kingfisher
+
+class listCell: UICollectionViewCell {
+
+    static let reuseIdentifier = String(describing: listCell.self)
+
+    private var nameView: UILabel!
+    private var summaryView: UILabel!
+    private var imgView: UIImageView!
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        buildViews()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func setName(name: String) {
+        nameView.text = "\(name)"
+    }
+    
+    func setSummary(summary: String) {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineHeightMultiple = 1.4
+        summaryView.attributedText = NSMutableAttributedString(string: "\(summary)", attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
+//        summaryView.text = "\(summary)"
+    }
+    
+    func setImage(imageUrl: String) {
+        imgView.kf.setImage(with: URL(string: "\(imageUrl)"))
+    }
+
+}
+
+extension listCell {
+
+    private func buildViews() {
+        createViews()
+        styleViews()
+        defineLayout()
+    }
+
+    private func createViews() {
+        nameView = UILabel()
+        summaryView = UILabel()
+        imgView = UIImageView()
+        contentView.addSubview(nameView)
+        contentView.addSubview(summaryView)
+        contentView.addSubview(imgView)
+    }
+
+    private func styleViews() {
+        contentView.backgroundColor = .white
+        
+        contentView.layer.cornerRadius = 10
+        contentView.layer.shadowPath = UIBezierPath(roundedRect: contentView.bounds, cornerRadius: 10).cgPath
+        contentView.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.1).cgColor
+        contentView.layer.shadowRadius = 20
+        contentView.layer.shadowOpacity = 1
+        contentView.layer.shadowOffset = CGSize(width: 0, height: 4)
+        contentView.layer.position = contentView.center
+        
+        
+        
+        imgView.layer.cornerRadius = 10
+        imgView.clipsToBounds = true
+        imgView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
+        
+        nameView.textColor = .black
+        nameView.font = UIFont(name: "ProximaNova-Bold", size: 16)
+        nameView.textAlignment = .left
+
+        summaryView.textColor = .black
+        summaryView.font = UIFont(name: "ProximaNova-Regular", size: 14)
+        summaryView.textAlignment = .left
+        summaryView.numberOfLines = 0
+        summaryView.lineBreakMode = .byWordWrapping
+        
+        
+    }
+
+    private func defineLayout() {
+        nameView.autoSetDimension(.height, toSize: 20)
+        nameView.autoPinEdge(toSuperviewEdge: .top, withInset: 12)
+        nameView.autoPinEdge(.leading, to: .trailing, of: imgView, withOffset: 16)
+        nameView.autoPinEdge(toSuperviewSafeArea: .trailing)
+        
+        summaryView.autoPinEdge(toSuperviewEdge: .trailing, withInset: 12)
+        summaryView.autoPinEdge(.leading, to: .trailing, of: imgView, withOffset: 16)
+        summaryView.autoPinEdge(.top, to: .bottom, of: nameView, withOffset: 8)
+        summaryView.autoPinEdge(toSuperviewSafeArea: .bottom, withInset: 8)
+        
+        imgView.autoSetDimension(.width, toSize: 97)
+        imgView.autoPinEdge(toSuperviewEdge: .top)
+        imgView.autoPinEdge(toSuperviewEdge: .bottom)
+        imgView.autoPinEdge(toSuperviewEdge: .leading)
+    }
+
+}
+
