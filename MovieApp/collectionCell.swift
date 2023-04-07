@@ -11,6 +11,7 @@ class collectionCell: UITableViewCell {
     private var title: String!
     private var collectionView: UICollectionView!
     private var movieCategory: [MovieModel]!
+    private let titleOffset: CGFloat = 16
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -81,11 +82,11 @@ extension collectionCell {
     private func defineLayout() {
         titleView.autoSetDimension(.height, toSize: 28)
         titleView.autoPinEdge(toSuperviewEdge: .top)
-        titleView.autoPinEdge(toSuperviewEdge: .leading, withInset: 16)
-        titleView.autoPinEdge(toSuperviewEdge: .trailing, withInset: 16)
+        titleView.autoPinEdge(toSuperviewEdge: .leading, withInset: titleOffset)
+        titleView.autoPinEdge(toSuperviewEdge: .trailing, withInset: titleOffset)
         
-        collectionView.autoPinEdge(.top, to: .bottom, of: titleView, withOffset: 16)
-        collectionView.autoPinEdge(toSuperviewEdge: .leading, withInset: 16)
+        collectionView.autoPinEdge(.top, to: .bottom, of: titleView, withOffset: titleOffset)
+        collectionView.autoPinEdge(toSuperviewEdge: .leading, withInset: titleOffset)
         collectionView.autoPinEdge(toSuperviewEdge: .trailing)
         collectionView.autoPinEdge(toSuperviewEdge: .bottom, withInset: 40)
     }
