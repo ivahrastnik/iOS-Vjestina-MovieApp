@@ -22,29 +22,8 @@ class collectionCell: UITableViewCell {
     }
 
     
-    func setCollectionCell(rowId: Int) {
-        
-        if (rowId == 0) {
-            movieCategory = MovieUseCase().popularMovies
-            title = "What's popular"
-        } else if (rowId == 1) {
-            movieCategory = MovieUseCase().freeToWatchMovies
-            title = "Free to watch"
-        } else if (rowId == 2){
-            movieCategory = MovieUseCase().trendingMovies
-            title = "Trending"
-        } else {
-            print("ERROR! Row id is wrong.")
-        }
-        
-        // Set title
+    func setCollectionCell() {
         titleView.text = title
-        
-        // Set collection
-        
-        
-        
-        
     }
 
 }
@@ -83,6 +62,20 @@ extension collectionCell {
         collectionView.backgroundColor = .white
         collectionView.dataSource = self
         collectionView.delegate = self
+        
+        let id = categoryId!
+        if (id == 0) {
+            movieCategory = MovieUseCase().popularMovies
+            title = "What's popular"
+        } else if (id == 1) {
+            movieCategory = MovieUseCase().freeToWatchMovies
+            title = "Free to watch"
+        } else if (id == 2){
+            movieCategory = MovieUseCase().trendingMovies
+            title = "Trending"
+        } else {
+            print("ERROR! Row id is wrong.")
+        }
     }
 
     private func defineLayout() {
@@ -104,7 +97,7 @@ extension collectionCell: UICollectionViewDataSource {
         return 1
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return MovieUseCase().popularMovies.count
+        return movieCategory.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
@@ -112,11 +105,12 @@ extension collectionCell: UICollectionViewDataSource {
 
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: movieCell.reuseIdentifier, for: indexPath)
                 as? movieCell,
-              MovieUseCase().popularMovies.count > indexPath.item
+              movieCategory.count > indexPath.item
         else { return UICollectionViewCell() }
         print("DEBUG: cellForItemAt: \(indexPath)")
 
-        let movie = MovieUseCase().popularMovies[indexPath.row]
+        let movie = movieCategory[indexPath.row]
+        cell.setImage(imageUrl: movie.imageUrl)
 
         return cell
     }
@@ -131,8 +125,6 @@ extension collectionCell: UICollectionViewDelegate {
 extension collectionCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout:
                         UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let emptySpace = 16
-        let width = (Int(collectionView.frame.width) - emptySpace)
         return CGSize(width: 122, height: 179)
     }
 }

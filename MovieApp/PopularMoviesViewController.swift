@@ -4,17 +4,11 @@ import PureLayout
 import MovieAppData
 import Kingfisher
 
+public var categoryId: Int!
 
 class PopularMoviesViewController: UIViewController {
     
-    
-    private var scrollView: UIScrollView!
     private var tableView: UITableView!
-    private var popularCollectionView: UICollectionView!
-    private var freeCollectionView: UICollectionView!
-    private var trendingCollectionView: UICollectionView!
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,26 +19,24 @@ class PopularMoviesViewController: UIViewController {
         y: 0,
         width: view.bounds.width, height: view.bounds.height))
         view.addSubview(tableView)
-//        tableView.register(collectionCell.self, forCellReuseIdentifier: cellIdentifier) // 1.
         tableView.dataSource = self // 2.
-        
         buildViews()
-        
     }
     
     private func buildViews() {
-//        createViews()
-//        styleViews()
+        styleViews()
         defineLayoutForViews()
     }
     
+    private func styleViews(){
+        tableView.separatorStyle = .none
+    }
+    
     private func defineLayoutForViews() {
-        
         tableView.autoPinEdge(toSuperviewEdge: .bottom)
         tableView.autoPinEdge(toSuperviewEdge: .leading)
         tableView.autoPinEdge(toSuperviewEdge: .trailing)
         tableView.autoPinEdge(toSuperviewEdge: .top, withInset: 24)
-        
     }
 }
     
@@ -56,9 +48,7 @@ extension PopularMoviesViewController: UITableViewDataSource { // 3.
         return 3
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) // 4.
-//        var cellConfig: UIListContentConfiguration = cell.defaultContentConfiguration() // 5.
-        
+        categoryId = indexPath.row
         self.tableView.register(collectionCell.self, forCellReuseIdentifier: "collectionCell")
         self.tableView.rowHeight = self.view.bounds.height / 3
         
@@ -68,35 +58,10 @@ extension PopularMoviesViewController: UITableViewDataSource { // 3.
                 
         else { return UITableViewCell() }
         print("DEBUG: cellForItemAt: \(indexPath)")
-        
-        
-//
-//        cellConfig.text = "Row \(indexPath.row)"
-//        cellConfig.textProperties.color = .blue
-//        cell.contentConfiguration = cellConfig
-//        if (indexPath.row == 0) {
-//            movieCategory = MovieUseCase().popularMovies
-//            cell.setTitle(title: "What's popular")
-//        } else if (indexPath.row == 1) {
-//            movieCategory = MovieUseCase().freeToWatchMovies
-//            cell.setTitle(title: "Free to watch")
-//        } else {
-//            movieCategory = MovieUseCase().trendingMovies
-//            cell.setTitle(title: "Trending")
-//        }
-        
-        cell.setCollectionCell(rowId: indexPath.row)
-        
+        cell.setCollectionCell()
         
         return cell
     }
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return view.bounds.height / 3
-//    }
-//
-//    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return view.bounds.height / 3
-//    }
 }
  
 extension PopularMoviesViewController: UICollectionViewDelegate {

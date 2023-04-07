@@ -20,7 +20,9 @@ class movieCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    
+    func setImage(imageUrl: String) {
+        imgView.kf.setImage(with: URL(string: "\(imageUrl)"))
+    }
 
 }
 
@@ -33,15 +35,20 @@ extension movieCell {
     }
 
     private func createViews() {
+        imgView = UIImageView()
+        contentView.addSubview(imgView)
     }
 
     private func styleViews() {
-        contentView.backgroundColor = .systemPink
+        contentView.backgroundColor = .white
         contentView.layer.cornerRadius = 10
+        
+        imgView.layer.cornerRadius = 10
+        imgView.clipsToBounds = true
     }
 
     private func defineLayout() {
-        
+        imgView.autoPinEdgesToSuperviewEdges()
     }
 
 }
