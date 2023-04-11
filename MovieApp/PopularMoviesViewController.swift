@@ -9,6 +9,8 @@ public var categoryId: Int!
 class PopularMoviesViewController: UIViewController {
     
     private var tableView: UITableView!
+    private let tableViewCellHeight: CGFloat = 263
+    private let numberOfMovieCategories: Int = 3
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,7 +21,7 @@ class PopularMoviesViewController: UIViewController {
         y: 0,
         width: view.bounds.width, height: view.bounds.height))
         view.addSubview(tableView)
-        tableView.dataSource = self // 2.
+        tableView.dataSource = self
         buildViews()
     }
     
@@ -40,17 +42,17 @@ class PopularMoviesViewController: UIViewController {
     }
 }
     
-extension PopularMoviesViewController: UITableViewDataSource { // 3.
+extension PopularMoviesViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return numberOfMovieCategories
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         categoryId = indexPath.row
         self.tableView.register(collectionCell.self, forCellReuseIdentifier: "collectionCell")
-        self.tableView.rowHeight = self.view.bounds.height / 3
+        self.tableView.rowHeight = tableViewCellHeight
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: collectionCell.reuseIdentifier, for: indexPath)
                 as? collectionCell,
@@ -58,21 +60,7 @@ extension PopularMoviesViewController: UITableViewDataSource { // 3.
                 
         else { return UITableViewCell() }
         print("DEBUG: cellForItemAt: \(indexPath)")
-        cell.setCollectionCell()
         
         return cell
-    }
-}
- 
-extension PopularMoviesViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // Logic when cell is selected
-    }
-}
-
-extension PopularMoviesViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout:
-                        UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 358, height: 142)
     }
 }

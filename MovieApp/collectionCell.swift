@@ -9,9 +9,14 @@ class collectionCell: UITableViewCell {
 
     private var titleView: UILabel!
     private var title: String!
+    private var flowLayout: UICollectionViewFlowLayout!
     private var collectionView: UICollectionView!
     private var movieCategory: [MovieModel]!
+    private var movieCategories: [[MovieModel]] = [MovieUseCase().popularMovies, MovieUseCase().freeToWatchMovies, MovieUseCase().trendingMovies]
     private let titleOffset: CGFloat = 16
+    private let imageWidth: CGFloat = 122
+    private let imageHeight: CGFloat = 179
+    private let titleCategory: [String] = ["What's popular", "Free to watch", "Trending"]
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -21,12 +26,6 @@ class collectionCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    
-    func setCollectionCell() {
-        titleView.text = title
-    }
-
 }
 
 extension collectionCell {
@@ -43,7 +42,7 @@ extension collectionCell {
         
         title = String()
         
-        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .horizontal
         
         collectionView = UICollectionView(
@@ -55,28 +54,17 @@ extension collectionCell {
 
     private func styleViews() {
         contentView.backgroundColor = .white
-        titleView.text = title
+        
         titleView.textColor = .black
         titleView.font = UIFont(name: "ProximaNova-Bold", size: 20)
         titleView.textAlignment = .left
         
-        collectionView.backgroundColor = .white
         collectionView.dataSource = self
         collectionView.delegate = self
         
         let id = categoryId!
-        if (id == 0) {
-            movieCategory = MovieUseCase().popularMovies
-            title = "What's popular"
-        } else if (id == 1) {
-            movieCategory = MovieUseCase().freeToWatchMovies
-            title = "Free to watch"
-        } else if (id == 2){
-            movieCategory = MovieUseCase().trendingMovies
-            title = "Trending"
-        } else {
-            print("ERROR! Row id is wrong.")
-        }
+        movieCategory = movieCategories[id]
+        titleView.text = titleCategory[id]
     }
 
     private func defineLayout() {
@@ -109,23 +97,16 @@ extension collectionCell: UICollectionViewDataSource {
               movieCategory.count > indexPath.item
         else { return UICollectionViewCell() }
         print("DEBUG: cellForItemAt: \(indexPath)")
-
-        let movie = movieCategory[indexPath.row]
-        cell.setImage(imageUrl: movie.imageUrl)
-
+//
+//        let movie = movieCategory[indexPath.row]
+        cell.setImage(imageUrl: movieCategory[indexPath.row].imageUrl)
         return cell
-    }
-}
-
-extension collectionCell: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // Logic when cell is selected
     }
 }
 
 extension collectionCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout:
                         UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 122, height: 179)
+        return CGSize(width: imageWidth, height: imageHeight)
     }
 }

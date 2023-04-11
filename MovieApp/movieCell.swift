@@ -4,11 +4,6 @@ import Kingfisher
 
 class movieCell: UICollectionViewCell {
     
-//    override func viewDidLayoutSubviews() {
-//        iconView.layer.cornerRadius = iconView.layer.bounds.width / 2
-//        iconView.clipsToBounds = true
-//    }
-
     static let reuseIdentifier = String(describing: movieCell.self)
 
     private var imgView: UIImageView!
@@ -59,12 +54,11 @@ extension movieCell {
         imgView.layer.cornerRadius = cornerRadius
         imgView.clipsToBounds = true
         
-        iconView.backgroundColor = UIColor(red: 0.04, green: 0.15, blue: 0.25, alpha: 0.6)
+        iconView.backgroundColor = Colors.iconBackgroundColor
         iconView.layer.cornerRadius = iconViewSize / 2
         iconView.clipsToBounds = true
         
-        let icon = UIImage(systemName: "heart")
-        iconImage.image = icon
+        iconImage.image = UIImage(systemName: "heart")
         iconImage.tintColor = .white
     }
 

@@ -54,6 +54,8 @@ class MovieDetailsViewController: UIViewController {
     private var collectionWidth: Float!
     let cellIdentifier = "cellId"
     
+    private var imageHeight: CGFloat!
+    
     override func viewDidLoad() {
         buildViews()
     }
@@ -74,6 +76,7 @@ class MovieDetailsViewController: UIViewController {
 //                buildViews()
 //            }
 //    }
+    
     private func buildViews() {
         createViews()
         styleViews()
@@ -82,17 +85,18 @@ class MovieDetailsViewController: UIViewController {
     
     private func createViews(){
         
-        scrollView = UIScrollView()
-        view.addSubview(scrollView)
-        contentView = UIView()
-        scrollView.addSubview(contentView)
+//        scrollView = UIScrollView()
+//        view.addSubview(scrollView)
+//        contentView = UIView()
+//        scrollView.addSubview(contentView)
         
         imgView = UIImageView()
         imgView.kf.setImage(with: URL(string: details.imageUrl))
+        imageHeight = (327/852)*screenHeight
         
         movieView1 = UIView()
         movieView1.addSubview(imgView)
-        scrollView.addSubview(movieView1)
+        view.addSubview(movieView1)
         
         userScoreView = UIView()
         movieView1.addSubview(userScoreView)
@@ -127,7 +131,7 @@ class MovieDetailsViewController: UIViewController {
         iconView.addSubview(iconImage)
         
         movieView2 = UIView()
-        scrollView.addSubview(movieView2)
+        view.addSubview(movieView2)
         
         label = UILabel()
         movieView2.addSubview(label)
@@ -143,8 +147,6 @@ class MovieDetailsViewController: UIViewController {
     
     private func styleViews() {
         
-        contentView.backgroundColor = .white
-        scrollView.backgroundColor = .white
         movieView1.backgroundColor = .white
         movieView2.backgroundColor = .white
         
@@ -218,10 +220,11 @@ class MovieDetailsViewController: UIViewController {
         
         iconView.backgroundColor = UIColor(red: 0.459, green: 0.459, blue: 0.459, alpha: 1)
         
-        
         let icon = UIImage(systemName: "star")
         iconImage.image = icon
         iconImage.tintColor = .white
+        
+        movieView2.backgroundColor = .white
         
         flowLayout.scrollDirection = .vertical
         flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
@@ -236,13 +239,13 @@ class MovieDetailsViewController: UIViewController {
     
     private func defineLayoutForViews(){
         
-        scrollView.autoPinEdgesToSuperviewEdges()
-        contentView.autoPinEdge(toSuperviewEdge: .top)
-        contentView.autoPinEdge(toSuperviewEdge: .bottom)
-        contentView.autoPinEdge(.leading, to: .leading, of: view)
-        contentView.autoPinEdge(.trailing, to: .trailing, of: view)
+//        scrollView.autoPinEdgesToSuperviewEdges()
+//        contentView.autoPinEdge(toSuperviewEdge: .top)
+//        contentView.autoPinEdge(toSuperviewEdge: .bottom)
+//        contentView.autoPinEdge(.leading, to: .leading, of: view)
+//        contentView.autoPinEdge(.trailing, to: .trailing, of: view)
             
-        movieView1.autoSetDimension(.height, toSize: (327/852)*screenHeight)
+        movieView1.autoSetDimension(.height, toSize: imageHeight)
         movieView1.autoPinEdge(toSuperviewEdge: .top)
         movieView1.autoPinEdge(toSuperviewEdge: .leading)
         movieView1.autoPinEdge(toSuperviewEdge: .trailing)
@@ -304,7 +307,8 @@ class MovieDetailsViewController: UIViewController {
         iconImage.autoSetDimension(.width, toSize: 14)
         iconImage.autoCenterInSuperview()
         
-        movieView2.autoPinEdge(toSuperviewEdge: .bottom)
+//        movieView2.autoPinEdge(toSuperviewEdge: .bottom)
+        movieView1.autoSetDimension(.height, toSize: screenHeight - imageHeight)
         movieView2.autoPinEdge(.top, to: .bottom, of: movieView1)
         movieView2.autoPinEdge(toSuperviewEdge: .leading)
         movieView2.autoPinEdge(toSuperviewEdge: .trailing)
