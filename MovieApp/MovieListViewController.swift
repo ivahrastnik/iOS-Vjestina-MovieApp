@@ -9,8 +9,10 @@ let allMovies = MovieUseCase().allMovies
 
 class MovieListViewController: UIViewController {
     
-//    private var scrollView: UIScrollView!
+    private var flowLayout: UICollectionViewFlowLayout!
     private var collectionView: UICollectionView!
+    private var collectionCellHeight: Int = 142
+    private var collectionCellWidth: Int!
     
     let cellIdentifier = "cellId"
     
@@ -19,23 +21,6 @@ class MovieListViewController: UIViewController {
         buildViews()
     }
     
-//    override func viewDidLoad() {
-//
-//        super.viewDidLoad()
-////        buildViews()
-//
-//        view.backgroundColor = .white
-//        let tableView = UITableView(
-//        frame: CGRect( x: 0,
-//        y: 0,
-//        width: view.bounds.width, height: view.bounds.height))
-//        view.addSubview(tableView)
-//        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier) // 1.
-//        tableView.dataSource = self // 2. }
-//
-//
-//    }
-    
     private func buildViews() {
         createViews()
         styleViews()
@@ -43,11 +28,7 @@ class MovieListViewController: UIViewController {
     }
 
     private func createViews() {
-
-//        scrollView = UIScrollView()
-//        view.addSubview(scrollView)
-        
-        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .vertical
         
         collectionView = UICollectionView(
@@ -55,31 +36,19 @@ class MovieListViewController: UIViewController {
             collectionViewLayout: flowLayout)
         
         view.addSubview(collectionView)
-
-
     }
     
     private func styleViews() {
-
         view.backgroundColor = .white
-        collectionView.backgroundColor = .white
         collectionView.dataSource = self
         collectionView.delegate = self
     }
 
     private func defineLayoutForViews() {
-
-//        collectionView.autoPinEdgesToSuperviewEdges()
         collectionView.autoPinEdge(toSuperviewEdge: .top)
         collectionView.autoPinEdge(toSuperviewEdge: .bottom)
         collectionView.autoPinEdge(toSuperviewSafeArea: .leading)
         collectionView.autoPinEdge(toSuperviewSafeArea: .trailing)
-//        collectionView.autoPinEdge(toSuperviewEdge: .top)
-//        collectionView.autoPinEdge(toSuperviewEdge: .leading)
-//        collectionView.autoPinEdge(toSuperviewEdge: .trailing)
-//        collectionView.autoSetDimension(.height, toSize: 84)
-//        collectionView.autoPinEdge(toSuperviewEdge: .bottom)
-
     }
     
 }
@@ -104,22 +73,16 @@ extension MovieListViewController: UICollectionViewDataSource {
         let movie = allMovies[indexPath.row]
         cell.setImage(imageUrl: movie.imageUrl)
         
-        var wholeName = movie.name
+        var movieNameAndYearLabel = movie.name
         let year = (MovieUseCase().getDetails(id: movie.id)?.year)!
-        wholeName += " ("
-        wholeName += NumberFormatter.localizedString(from: NSNumber(value: year), number: .none)
-        wholeName += ")"
+        movieNameAndYearLabel += " ("
+        movieNameAndYearLabel += NumberFormatter.localizedString(from: NSNumber(value: year), number: .none)
+        movieNameAndYearLabel += ")"
         
-        cell.setName(name: movie.name)
+        cell.setName(name: movieNameAndYearLabel)
         cell.setSummary(summary: movie.summary)
         
         return cell
-    }
-}
-
-extension MovieListViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // Logic when cell is selected
     }
 }
 
@@ -127,8 +90,8 @@ extension MovieListViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout:
                         UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let emptySpace = 2*16
-        let width = (Int(collectionView.frame.width) - emptySpace)
-        return CGSize(width: width, height: 142)
+        collectionCellWidth = (Int(collectionView.frame.width) - emptySpace)
+        return CGSize(width: collectionCellWidth, height: collectionCellHeight)
     }
 }
 

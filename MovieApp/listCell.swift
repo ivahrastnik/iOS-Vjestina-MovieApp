@@ -9,6 +9,7 @@ class listCell: UICollectionViewCell {
     private var nameView: UILabel!
     private var summaryView: UILabel!
     private var imgView: UIImageView!
+    private let cornerRadiusSize: CGFloat = 10
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -27,7 +28,6 @@ class listCell: UICollectionViewCell {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 1.4
         summaryView.attributedText = NSMutableAttributedString(string: "\(summary)", attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
-//        summaryView.text = "\(summary)"
     }
     
     func setImage(imageUrl: String) {
@@ -56,9 +56,9 @@ extension listCell {
     private func styleViews() {
         contentView.backgroundColor = .white
         
-        contentView.layer.cornerRadius = 10
+        contentView.layer.cornerRadius = cornerRadiusSize
         contentView.layer.shadowPath = UIBezierPath(roundedRect: contentView.bounds, cornerRadius: 10).cgPath
-        contentView.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.1).cgColor
+        contentView.layer.shadowColor = Colors.shadowColor.cgColor
         contentView.layer.shadowRadius = 20
         contentView.layer.shadowOpacity = 1
         contentView.layer.shadowOffset = CGSize(width: 0, height: 4)
@@ -66,7 +66,7 @@ extension listCell {
         
         
         
-        imgView.layer.cornerRadius = 10
+        imgView.layer.cornerRadius = cornerRadiusSize
         imgView.clipsToBounds = true
         imgView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
         

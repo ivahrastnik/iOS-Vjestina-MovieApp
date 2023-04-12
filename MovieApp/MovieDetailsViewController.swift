@@ -20,8 +20,8 @@ public var screenHeight: CGFloat {
 
 class MovieDetailsViewController: UIViewController {
     
-    private var scrollView: UIScrollView!
-    private var contentView: UIView!
+//    private var scrollView: UIScrollView!
+//    private var contentView: UIView!
         
     private var movieView1: UIView!
     private var movieView2: UIView!
@@ -167,11 +167,11 @@ class MovieDetailsViewController: UIViewController {
         textBox.attributedText = NSMutableAttributedString(string: details.summary, attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
         
         score.textColor = .white
-        score.font = UIFont(name: "ProximaNova-ExtraBold", size: 16) //EXTRABOLD
-        score.text = NumberFormatter.localizedString(from: NSNumber(value: details.rating ), number: .decimal)
+        score.font = UIFont(name: "ProximaNova-ExtraBold", size: 16)
+        score.text = NumberFormatter.localizedString(from: NSNumber(value: details.rating), number: .decimal)
         
         scoreLabel.textColor = .white
-        scoreLabel.font = UIFont(name: "ProximaNova-SemiBold", size: 14) //semibold
+        scoreLabel.font = UIFont(name: "ProximaNova-SemiBold", size: 14)
         scoreLabel.text = "User score"
         
         titleText.font = UIFont(name: "ProximaNova-Bold", size: 22)
@@ -307,8 +307,8 @@ class MovieDetailsViewController: UIViewController {
         iconImage.autoSetDimension(.width, toSize: 14)
         iconImage.autoCenterInSuperview()
         
-//        movieView2.autoPinEdge(toSuperviewEdge: .bottom)
-        movieView1.autoSetDimension(.height, toSize: screenHeight - imageHeight)
+        movieView2.autoPinEdge(toSuperviewEdge: .bottom)
+//        movieView1.autoSetDimension(.height, toSize: screenHeight - imageHeight)
         movieView2.autoPinEdge(.top, to: .bottom, of: movieView1)
         movieView2.autoPinEdge(toSuperviewEdge: .leading)
         movieView2.autoPinEdge(toSuperviewEdge: .trailing)
@@ -324,8 +324,7 @@ class MovieDetailsViewController: UIViewController {
         collectionView.autoPinEdge(.top, to: .bottom, of: textBox, withOffset: 27.62)
         collectionView.autoPinEdge(toSuperviewEdge: .leading)
         collectionView.autoPinEdge(toSuperviewEdge: .trailing)
-        collectionView.autoSetDimension(.height, toSize: 84)
-        collectionView.autoPinEdge(toSuperviewEdge: .bottom)
+        collectionView.autoPinEdge(toSuperviewEdge: .bottom, withInset: 260)
         
     }
     
@@ -352,7 +351,6 @@ extension MovieDetailsViewController: UICollectionViewDataSource {
             details.crewMembers.count > indexPath.item
                 
         else { return UICollectionViewCell() }
-//        print("DEBUG: cellForItemAt: \(indexPath)")
         cell.setName(name: String(details.crewMembers[indexPath.row].name))
         cell.setRole(role: String(details.crewMembers[indexPath.row].role))
         return cell
