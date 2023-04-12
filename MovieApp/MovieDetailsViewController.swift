@@ -307,8 +307,7 @@ class MovieDetailsViewController: UIViewController {
         iconImage.autoSetDimension(.width, toSize: 14)
         iconImage.autoCenterInSuperview()
         
-        movieView2.autoPinEdge(toSuperviewEdge: .bottom)
-//        movieView1.autoSetDimension(.height, toSize: screenHeight - imageHeight)
+        movieView2.autoSetDimension(.height, toSize: screenHeight - imageHeight)
         movieView2.autoPinEdge(.top, to: .bottom, of: movieView1)
         movieView2.autoPinEdge(toSuperviewEdge: .leading)
         movieView2.autoPinEdge(toSuperviewEdge: .trailing)
@@ -324,7 +323,7 @@ class MovieDetailsViewController: UIViewController {
         collectionView.autoPinEdge(.top, to: .bottom, of: textBox, withOffset: 27.62)
         collectionView.autoPinEdge(toSuperviewEdge: .leading)
         collectionView.autoPinEdge(toSuperviewEdge: .trailing)
-        collectionView.autoPinEdge(toSuperviewEdge: .bottom, withInset: 260)
+        collectionView.autoPinEdge(toSuperviewEdge: .bottom)
         
     }
     
