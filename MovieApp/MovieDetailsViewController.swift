@@ -343,10 +343,10 @@ extension MovieDetailsViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        self.collectionView.register(personCell.self, forCellWithReuseIdentifier: "personCell")
+        self.collectionView.register(PersonCell.self, forCellWithReuseIdentifier: "personCell")
         
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: personCell.reuseIdentifier, for: indexPath)
-                as? personCell,
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PersonCell.reuseIdentifier, for: indexPath)
+                as? PersonCell,
             details.crewMembers.count > indexPath.item
                 
         else { return UICollectionViewCell() }

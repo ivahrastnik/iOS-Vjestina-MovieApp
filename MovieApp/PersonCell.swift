@@ -1,9 +1,9 @@
 import UIKit
 import PureLayout
 
-class personCell: UICollectionViewCell {
+class PersonCell: UICollectionViewCell {
 
-    static let reuseIdentifier = String(describing: personCell.self)
+    static let reuseIdentifier = String(describing: PersonCell.self)
 
     private var nameLabel: UILabel!
     private var roleLabel: UILabel!
@@ -27,7 +27,7 @@ class personCell: UICollectionViewCell {
 
 }
 
-extension personCell {
+extension PersonCell {
 
     private func buildViews() {
         createViews()

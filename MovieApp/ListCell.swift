@@ -2,9 +2,9 @@ import UIKit
 import PureLayout
 import Kingfisher
 
-class listCell: UICollectionViewCell {
+class ListCell: UICollectionViewCell {
 
-    static let reuseIdentifier = String(describing: listCell.self)
+    static let reuseIdentifier = String(describing: ListCell.self)
 
     private var nameView: UILabel!
     private var summaryView: UILabel!
@@ -19,24 +19,23 @@ class listCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    func setName(name: String) {
-        nameView.text = "\(name)"
-    }
     
-    func setSummary(summary: String) {
+    func set(name: String, summary: String, imageUrl: String, year: Int) {
+        var movieNameAndYearLabel = name
+        movieNameAndYearLabel += " ("
+        movieNameAndYearLabel += NumberFormatter.localizedString(from: NSNumber(value: year), number: .none)
+        movieNameAndYearLabel += ")"
+        nameView.text = movieNameAndYearLabel
+        
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineHeightMultiple = 1.4
-        summaryView.attributedText = NSMutableAttributedString(string: "\(summary)", attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
+        summaryView.attributedText = NSMutableAttributedString(string: summary, attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
+        
+        imgView.kf.setImage(with: URL(string: imageUrl))
     }
-    
-    func setImage(imageUrl: String) {
-        imgView.kf.setImage(with: URL(string: "\(imageUrl)"))
-    }
-
 }
 
-extension listCell {
+extension ListCell {
 
     private func buildViews() {
         createViews()
@@ -63,8 +62,6 @@ extension listCell {
         contentView.layer.shadowOpacity = 1
         contentView.layer.shadowOffset = CGSize(width: 0, height: 4)
         contentView.layer.position = contentView.center
-        
-        
         
         imgView.layer.cornerRadius = cornerRadiusSize
         imgView.clipsToBounds = true
@@ -99,6 +96,4 @@ extension listCell {
         imgView.autoPinEdge(toSuperviewEdge: .bottom)
         imgView.autoPinEdge(toSuperviewEdge: .leading)
     }
-
 }
-

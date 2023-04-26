@@ -4,33 +4,35 @@ import PureLayout
 import MovieAppData
 import Kingfisher
 
-public var categoryId: Int!
-
 class PopularMoviesViewController: UIViewController {
     
     private var tableView: UITableView!
+    private var movieCategories: [[MovieModel]]!
+    private var titleCategories: [String]!
     private let tableViewCellHeight: CGFloat = 263
     private let numberOfMovieCategories: Int = 3
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = .white
-        tableView = UITableView(
-        frame: CGRect( x: 0,
-        y: 0,
-        width: view.bounds.width, height: view.bounds.height))
+        tableView = UITableView()
         view.addSubview(tableView)
         tableView.dataSource = self
         buildViews()
+        loadData()
     }
     
     private func buildViews() {
+        createViews()
         styleViews()
         defineLayoutForViews()
     }
     
-    private func styleViews(){
+    private func createViews() {
+        tableView.register(CollectionCell.self, forCellReuseIdentifier: "CollectionCell")
+    }
+    
+    private func styleViews() {
         tableView.separatorStyle = .none
     }
     
@@ -39,6 +41,15 @@ class PopularMoviesViewController: UIViewController {
         tableView.autoPinEdge(toSuperviewEdge: .leading)
         tableView.autoPinEdge(toSuperviewEdge: .trailing)
         tableView.autoPinEdge(toSuperviewEdge: .top, withInset: 24)
+    }
+    
+    private func loadData() {
+        movieCategories = [[MovieModel]] ()
+        movieCategories.append(MovieUseCase().popularMovies)
+        movieCategories.append(MovieUseCase().freeToWatchMovies)
+        movieCategories.append(MovieUseCase().trendingMovies)
+        titleCategories = ["What's popular", "Free to watch", "Trending"]
+        self.tableView.reloadData()
     }
 }
     
@@ -50,16 +61,17 @@ extension PopularMoviesViewController: UITableViewDataSource {
         return numberOfMovieCategories
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        categoryId = indexPath.row
-        self.tableView.register(collectionCell.self, forCellReuseIdentifier: "collectionCell")
+        
         self.tableView.rowHeight = tableViewCellHeight
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: collectionCell.reuseIdentifier, for: indexPath)
-                as? collectionCell,
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CollectionCell.reuseIdentifier, for: indexPath)
+                as? CollectionCell,
             3 > indexPath.item
-                
         else { return UITableViewCell() }
         print("DEBUG: cellForItemAt: \(indexPath)")
+        
+        let categoryId = indexPath.row
+        cell.set(title: titleCategories[categoryId], movies: movieCategories[categoryId])
         
         return cell
     }

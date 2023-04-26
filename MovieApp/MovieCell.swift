@@ -2,9 +2,9 @@ import UIKit
 import PureLayout
 import Kingfisher
 
-class movieCell: UICollectionViewCell {
+class MovieCell: UICollectionViewCell {
     
-    static let reuseIdentifier = String(describing: movieCell.self)
+    static let reuseIdentifier = String(describing: MovieCell.self)
 
     private var imgView: UIImageView!
     private var iconImage: UIImageView!
@@ -24,11 +24,11 @@ class movieCell: UICollectionViewCell {
     }
 
     func setImage(imageUrl: String) {
-        imgView.kf.setImage(with: URL(string: "\(imageUrl)"))
+        imgView.kf.setImage(with: URL(string: imageUrl))
     }
 }
 
-extension movieCell {
+extension MovieCell {
 
     private func buildViews() {
         createViews()
