@@ -17,6 +17,10 @@ class MovieListViewController: UIViewController {
         loadData()
     }
     
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) { super.willTransition(to: newCollection, with: coordinator)
+        flowLayout.invalidateLayout()
+    }
+    
     private func buildViews() {
         createViews()
         styleViews()
@@ -24,7 +28,7 @@ class MovieListViewController: UIViewController {
     }
     
     private func loadData() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
             self.allMovies = MovieUseCase().allMovies
             self.collectionView.reloadData()
         }
