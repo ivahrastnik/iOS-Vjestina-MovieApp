@@ -4,27 +4,20 @@ import PureLayout
 
 class LogInViewController: UIViewController {
     
-    private let bgColor = UIColor(red: 0.07, green: 0.23, blue: 0.39, alpha: 1.00)
-    private let lightBlue = UIColor(red: 0.30, green: 0.70, blue: 0.87, alpha: 1.00)
-    private let darkBlue = UIColor(red: 0.082, green: 0.302, blue: 0.521, alpha: 1.00)
-    private let shadowColor = UIColor(red: 0.00, green: 0.00, blue: 0.00, alpha: 0.09)
     
-    private var button: UIButton!
-    private var label: UILabel!
-    private var email: UILabel!
-    private var password: UILabel!
-    private var username: UITextField!
-    private var pass: UITextField!
+    private var signInButton: UIButton!
+    private var signInTitle: UILabel!
+    private var emailLabel: UILabel!
+    private var passwordLabel: UILabel!
+    private var usernameInputTextField: UITextField!
+    private var passwordInputTextField: UITextField!
     
-    private var inputView1: UIView!
-    private var inputView2: UIView!
+    private var emailInputContainer: UIView!
+    private var passwordInputContainer: UIView!
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         buildViews()
-        
-        
     }
     
     private func buildViews() {
@@ -34,152 +27,146 @@ class LogInViewController: UIViewController {
     }
     
     private func createViews() {
-        label = UILabel()
-        view.addSubview(label)
-        label.text = "Sign in"
+        signInTitle = UILabel()
+        view.addSubview(signInTitle)
         
-        inputView1 = UIView()
-        view.addSubview(inputView1)
+        emailInputContainer = UIView()
+        view.addSubview(emailInputContainer)
         
-        email = UILabel()
-        inputView1.addSubview(email)
-        email.text = "Email address"
+        emailLabel = UILabel()
+        emailInputContainer.addSubview(emailLabel)
         
-        username = UITextField()
-        inputView1.addSubview(username)
+        usernameInputTextField = UITextField()
+        emailInputContainer.addSubview(usernameInputTextField)
         
-        inputView2 = UIView()
-        view.addSubview(inputView2)
+        passwordInputContainer = UIView()
+        view.addSubview(passwordInputContainer)
         
-        password = UILabel()
-        inputView2.addSubview(password)
-        password.text = "Password"
+        passwordLabel = UILabel()
+        passwordInputContainer.addSubview(passwordLabel)
         
-        pass = UITextField()
-        inputView2.addSubview(pass)
+        passwordInputTextField = UITextField()
+        passwordInputContainer.addSubview(passwordInputTextField)
         
-        button = UIButton()
-        view.addSubview(button)
-        
-        
+        signInButton = UIButton()
+        view.addSubview(signInButton)
     }
     
     private func styleViews() {
-        view.backgroundColor = bgColor
+        view.backgroundColor = Colors.bgColor
         
-        label.textColor = .white
-        label.font = UIFont(name: "ProximaNova-Bold", size: 24)
-        label.textAlignment = .center
+        signInTitle.text = "Sign in"
+        signInTitle.textColor = .white
+        signInTitle.font = UIFont(name: "ProximaNova-Bold", size: 24)
+        signInTitle.textAlignment = .center
         
-        email.textColor = .white
-        email.font = UIFont(name: "ProximaNova-Bold", size: 14)
-        email.textAlignment = .left
+        emailLabel.text = "Email address"
+        emailLabel.textColor = .white
+        emailLabel.font = UIFont(name: "ProximaNova-Bold", size: 14)
+        emailLabel.textAlignment = .left
         
-        username.backgroundColor = darkBlue
-        username.layer.cornerRadius = 10
-        username.layer.borderWidth = 1
-        username.layer.borderColor = lightBlue.cgColor
-        username.textColor = lightBlue
-        
-//        username.layer.shadowColor = shadowColor.cgColor
-        username.layer.shadowColor = UIColor.black.cgColor
-        username.layer.shadowOpacity = 0.5
-        username.layer.shadowRadius = 3
-        username.layer.shadowOffset = .zero
+        usernameInputTextField.backgroundColor = Colors.darkBlue
+        usernameInputTextField.layer.cornerRadius = 10
+        usernameInputTextField.layer.borderWidth = 1
+        usernameInputTextField.layer.borderColor = Colors.lightBlue.cgColor
+        usernameInputTextField.textColor = Colors.lightBlue
         
         // padding of 16px for input text and placeholder
-        let paddingView = UIView(frame: CGRectMake(12, 12, 16, self.username.frame.height))
-        username.leftView = paddingView
-        username.leftViewMode = UITextField.ViewMode.always
+        let paddingView = UIView(frame: CGRectMake(12, 12, 16, 0))
+        usernameInputTextField.leftView = paddingView
+        usernameInputTextField.leftViewMode = UITextField.ViewMode.always
         
         // placeholder
-        username.attributedPlaceholder = NSAttributedString(
+        usernameInputTextField.attributedPlaceholder = NSAttributedString(
             string: "ex. Matt@iosCourse.com",
-            attributes: [NSAttributedString.Key.foregroundColor: lightBlue]
+            attributes: [NSAttributedString.Key.foregroundColor: Colors.lightBlue]
         )
         
-        password.textColor = .white
-        password.font = UIFont(name: "ProximaNova-Bold", size: 14)
-        password.textAlignment = .left
+        passwordLabel.text = "Password"
+        passwordLabel.textColor = .white
+        passwordLabel.font = UIFont(name: "ProximaNova-Bold", size: 14)
+        passwordLabel.textAlignment = .left
         
-        pass.isSecureTextEntry = true
+        passwordInputTextField.isSecureTextEntry = true
         
-        pass.backgroundColor = darkBlue
-        pass.layer.cornerRadius = 10
-        pass.layer.borderWidth = 1
-        pass.layer.borderColor = lightBlue.cgColor
-        pass.textColor = lightBlue
+        passwordInputTextField.backgroundColor = Colors.darkBlue
+        passwordInputTextField.layer.cornerRadius = 10
+        passwordInputTextField.layer.borderWidth = 1
+        passwordInputTextField.layer.borderColor = Colors.lightBlue.cgColor
+        passwordInputTextField.textColor = Colors.lightBlue
         
-        pass.layer.shadowColor = UIColor.black.cgColor
-        pass.layer.shadowOpacity = 0.5
-        pass.layer.shadowRadius = 3
-        pass.layer.shadowOffset = .zero
+        passwordInputTextField.layer.shadowColor = UIColor.black.cgColor
+        passwordInputTextField.layer.shadowOpacity = 0.5
+        passwordInputTextField.layer.shadowRadius = 3
+        passwordInputTextField.layer.shadowOffset = .zero
         
-        let paddingView2 = UIView(frame: CGRectMake(12, 12, 16, self.username.frame.height))
+        let paddingView2 = UIView(frame: CGRectMake(12, 12, 16, 0))
         
         // padding of 16px for input text and placeholder
-        pass.leftView = paddingView2
-        pass.leftViewMode = UITextField.ViewMode.always
+        passwordInputTextField.leftView = paddingView2
+        passwordInputTextField.leftViewMode = UITextField.ViewMode.always
 
         // placeholder
-        pass.attributedPlaceholder = NSAttributedString(
+        passwordInputTextField.attributedPlaceholder = NSAttributedString(
             string: "Password",
-            attributes: [NSAttributedString.Key.foregroundColor: lightBlue]
+            attributes: [NSAttributedString.Key.foregroundColor: Colors.lightBlue]
         )
         
-        button.setTitle("Sign in", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = lightBlue
-        button.layer.cornerRadius = 10
-        button.titleLabel?.font = UIFont(name: "ProximaNova-Bold", size: 14)
+        signInButton.setTitle("Sign in", for: .normal)
+        signInButton.setTitleColor(.white, for: .normal)
+        signInButton.backgroundColor = Colors.lightBlue
+        signInButton.layer.cornerRadius = 10
+        signInButton.titleLabel?.font = UIFont(name: "ProximaNova-Bold", size: 14)
         
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowOpacity = 0.5
-        button.layer.shadowRadius = 3
-        button.layer.shadowOffset = .zero
-        
-
+        signInButton.layer.shadowColor = UIColor.black.cgColor
+        signInButton.layer.shadowOpacity = 0.5
+        signInButton.layer.shadowRadius = 3
+        signInButton.layer.shadowOffset = .zero
     }
     
     private func defineLayoutForViews() {
         
-        label.autoSetDimension(.height, toSize: 26)
-        label.autoPinEdge(toSuperviewSafeArea: .top, withInset: 48)
-        label.autoPinEdge(toSuperviewEdge: .leading, withInset: 16)
-        label.autoPinEdge(toSuperviewEdge: .trailing, withInset: 16)
+        signInTitle.autoSetDimension(.height, toSize: 26)
+        signInTitle.autoPinEdge(toSuperviewSafeArea: .top, withInset: 48)
+        signInTitle.autoPinEdge(toSuperviewEdge: .leading, withInset: 16)
+        signInTitle.autoPinEdge(toSuperviewEdge: .trailing, withInset: 16)
         
-        inputView1.autoSetDimension(.height, toSize: 76)
-        inputView1.autoPinEdge(.top, to: .bottom, of: label, withOffset: 48)
-        inputView1.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 16)
-        inputView1.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 16)
+        emailInputContainer.autoSetDimension(.height, toSize: 76)
+        emailInputContainer.autoPinEdge(.top, to: .bottom, of: signInTitle, withOffset: 48)
+        emailInputContainer.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 16)
+        emailInputContainer.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 16)
         
-        email.autoSetDimension(.height, toSize: 20)
-        email.autoPinEdge(toSuperviewEdge: .top)
-        email.autoPinEdge(toSuperviewEdge: .leading)
+        emailLabel.autoSetDimension(.height, toSize: 20)
+        emailLabel.autoPinEdge(toSuperviewEdge: .top)
+        emailLabel.autoPinEdge(toSuperviewEdge: .leading)
+        emailLabel.autoPinEdge(toSuperviewEdge: .trailing)
         
-        username.autoSetDimension(.height, toSize: 48)
-        username.autoPinEdge(.top, to: .bottom, of: email, withOffset: 8)
-        username.autoPinEdge(toSuperviewEdge: .leading)
-        username.autoPinEdge(toSuperviewEdge: .trailing)
+        usernameInputTextField.autoSetDimension(.height, toSize: 48)
+        usernameInputTextField.autoPinEdge(.top, to: .bottom, of: emailLabel, withOffset: 8)
+        usernameInputTextField.autoPinEdge(toSuperviewEdge: .leading)
+        usernameInputTextField.autoPinEdge(toSuperviewEdge: .trailing)
         
-        inputView2.autoSetDimension(.height, toSize: 76)
-        inputView2.autoPinEdge(.top, to: .bottom, of: inputView1, withOffset: 24)
-        inputView2.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 16)
-        inputView2.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 16)
+        passwordInputContainer.autoSetDimension(.height, toSize: 76)
+        passwordInputContainer.autoPinEdge(.top, to: .bottom, of: emailInputContainer, withOffset: 24)
+        passwordInputContainer.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 16)
+        passwordInputContainer.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 16)
 
-        password.autoSetDimension(.height, toSize: 20)
-        password.autoPinEdge(toSuperviewEdge: .top)
-        password.autoPinEdge(toSuperviewEdge: .leading)
+        passwordLabel.autoSetDimension(.height, toSize: 20)
+        passwordLabel.autoPinEdge(toSuperviewEdge: .top)
+        passwordLabel.autoPinEdge(toSuperviewEdge: .leading)
+        passwordLabel.autoPinEdge(toSuperviewEdge: .trailing)
 
-        pass.autoSetDimension(.height, toSize: 48)
-        pass.autoPinEdge(.top, to: .bottom, of: password, withOffset: 8)
-        pass.autoPinEdge(toSuperviewEdge: .leading)
-        pass.autoPinEdge(toSuperviewEdge: .trailing)
+        passwordInputTextField.autoSetDimension(.height, toSize: 48)
+        passwordInputTextField.autoPinEdge(.top, to: .bottom, of: passwordLabel, withOffset: 8)
+        passwordInputTextField.autoPinEdge(toSuperviewEdge: .leading)
+        passwordInputTextField.autoPinEdge(toSuperviewEdge: .trailing)
         
-        button.autoPinEdge(.top, to: .bottom, of: inputView2, withOffset: 48)
-        button.autoSetDimension(.height, toSize: 40)
-        button.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 32)
-        button.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 32)
+        signInButton.autoPinEdge(.top, to: .bottom, of: passwordInputContainer, withOffset: 48)
+        signInButton.autoSetDimension(.height, toSize: 40)
+        signInButton.autoPinEdge(toSuperviewSafeArea: .leading, withInset: 32)
+        signInButton.autoPinEdge(toSuperviewSafeArea: .trailing, withInset: 32)
     }
     
 }
+
+
