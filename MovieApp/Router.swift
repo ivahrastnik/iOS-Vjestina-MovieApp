@@ -12,7 +12,7 @@ class Router: RouterProtocol {
         self.navigationController = navigationController
     }
     func setStartScreen(in window: UIWindow?) {
-        let vc = MovieListViewController(router: self)
+        let vc = MovieCategoriesListViewController(router: self)
         vc.navigationItem.title = "Movie list"
         navigationController.pushViewController(vc, animated: false)
         window?.rootViewController = navigationController

@@ -50,12 +50,12 @@ class MovieListViewController: UIViewController {
         view.addSubview(collectionView)
         
         collectionView.register(ListCell.self, forCellWithReuseIdentifier: ListCell.reuseIdentifier)
+        collectionView.dataSource = self
+        collectionView.delegate = self
     }
     
     private func styleViews() {
         view.backgroundColor = .white
-        collectionView.dataSource = self
-        collectionView.delegate = self
     }
 
     private func defineLayoutForViews() {

@@ -20,13 +20,6 @@ class MovieCategoriesListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let rightItem = UIBarButtonItem(barButtonSystemItem: .add, target: nil, action:
-        nil)
-        navigationItem.rightBarButtonItem = rightItem
-        
-        
-        
         buildViews()
         loadData()
     }
@@ -85,6 +78,10 @@ extension MovieCategoriesListViewController: UITableViewDataSource {
         
         let categoryId = indexPath.row
         cell.set(title: titleCategories[categoryId], movies: movieCategories[categoryId])
+        
+        cell.tapOnMovieCell = {
+            [weak self] (id: Int) in self?.router.showMovieDetailsViewController(movieId: id)
+        }
         
         return cell
     }
