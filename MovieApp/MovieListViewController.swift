@@ -17,13 +17,8 @@ class MovieListViewController: UIViewController {
         self.router = router
     }
     
-    @objc func handleGoToYellowControllerButton() {
-            router.showMovieDetailsViewController()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-//        navigationItem.title = "Movie list"
         buildViews()
         loadData()
     }
@@ -92,6 +87,7 @@ extension MovieListViewController: UICollectionViewDataSource {
         let year = (MovieUseCase().getDetails(id: movie.id)?.year) ?? 0
         cell.set(name: movie.name, summary: movie.summary, imageUrl: movie.imageUrl, year: year)
         
+        
         return cell
     }
 }
@@ -104,4 +100,13 @@ extension MovieListViewController: UICollectionViewDelegateFlowLayout {
         let collectionCellWidth = (Int(collectionView.bounds.width) - emptySpace)
         return CGSize(width: collectionCellWidth, height: collectionCellHeight)
     }
+}
+
+extension MovieListViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let movie = allMovies[indexPath.row]
+        router.showMovieDetailsViewController(movieId: movie.id)
+    }
+    
 }

@@ -3,7 +3,7 @@ import UIKit
 
 protocol RouterProtocol {
     func setStartScreen(in window: UIWindow?)
-    func showMovieDetailsViewController()
+    func showMovieDetailsViewController(movieId: Int)
 }
 class Router: RouterProtocol {
     private let navigationController: UINavigationController!
@@ -18,8 +18,9 @@ class Router: RouterProtocol {
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }
-    func showMovieDetailsViewController() {
-        let vc = MovieDetailsViewController(router: self)
+    func showMovieDetailsViewController(movieId: Int) {
+        let vc = MovieDetailsViewController(router: self, movieId: movieId)
+        vc.navigationItem.title = "Movie details"
         navigationController.pushViewController(vc, animated: true)
     }
 }

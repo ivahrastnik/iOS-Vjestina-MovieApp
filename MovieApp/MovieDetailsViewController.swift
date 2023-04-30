@@ -4,7 +4,7 @@ import PureLayout
 import MovieAppData
 import Kingfisher
 
-public let details = MovieUseCase().getDetails(id: 111161)!
+
 
 public var myCollectionView: UICollectionView!
 
@@ -22,7 +22,7 @@ class MovieDetailsViewController: UIViewController {
     
 //    private var scrollView: UIScrollView!
 //    private var contentView: UIView!
-        
+    private var details: MovieDetailsModel!
     private var movieView1: UIView!
     private var movieView2: UIView!
     
@@ -57,12 +57,15 @@ class MovieDetailsViewController: UIViewController {
     private var imageHeight: CGFloat!
     
     private var router: RouterProtocol!
-    convenience init(router: RouterProtocol) {
+    private var movieId: Int!
+    convenience init(router: RouterProtocol, movieId: Int) {
         self.init()
         self.router = router
+        self.movieId = movieId
     }
     
     override func viewDidLoad() {
+        details = MovieUseCase().getDetails(id: movieId)!
         buildViews()
     }
     
@@ -70,7 +73,9 @@ class MovieDetailsViewController: UIViewController {
         iconView.layer.cornerRadius = iconView.layer.bounds.width / 2
         iconView.clipsToBounds = true
     }
-    
+//    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) { super.willTransition(to: newCollection, with: coordinator)
+//        flowLayout.invalidateLayout()
+//    }
 //    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
 //            super.viewWillTransition(to: size, with: coordinator)
 //            if UIDevice.current.orientation.isLandscape {
@@ -149,12 +154,13 @@ class MovieDetailsViewController: UIViewController {
         
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         movieView2.addSubview(collectionView)
+        
+        collectionView.register(PersonCell.self, forCellWithReuseIdentifier: PersonCell.reuseIdentifier)
     }
     
     private func styleViews() {
         
-        movieView1.backgroundColor = .white
-        movieView2.backgroundColor = .white
+        view.backgroundColor = .white
         
         label.textColor = .black
         label.font = UIFont(name: "ProximaNova-Bold", size: 20)
@@ -252,12 +258,13 @@ class MovieDetailsViewController: UIViewController {
 //        contentView.autoPinEdge(.trailing, to: .trailing, of: view)
             
         movieView1.autoSetDimension(.height, toSize: imageHeight)
-        movieView1.autoPinEdge(toSuperviewEdge: .top)
+        movieView1.autoPinEdge(toSuperviewSafeArea: .top)
         movieView1.autoPinEdge(toSuperviewEdge: .leading)
         movieView1.autoPinEdge(toSuperviewEdge: .trailing)
         imgView.autoMatch(.height, to: .height, of: movieView1)
         
         imgView.contentMode = .scaleAspectFill
+        imgView.clipsToBounds = true
         imgView.autoPinEdge(toSuperviewEdge: .top)
         imgView.autoPinEdge(toSuperviewEdge: .leading)
         imgView.autoPinEdge(toSuperviewEdge: .trailing)
