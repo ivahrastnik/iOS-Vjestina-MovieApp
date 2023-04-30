@@ -56,6 +56,12 @@ class MovieDetailsViewController: UIViewController {
     
     private var imageHeight: CGFloat!
     
+    private var router: RouterProtocol!
+    convenience init(router: RouterProtocol) {
+        self.init()
+        self.router = router
+    }
+    
     override func viewDidLoad() {
         buildViews()
     }

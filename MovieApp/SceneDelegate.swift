@@ -21,10 +21,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene) //2
 //        let vc = LogInViewController() //DZ1
 //        let vc = MovieDetailsViewController() //DZ1
-//        let vc = PopularMoviesViewController() //DZ2
-        let vc = MovieListViewController() //DZ2
-        window?.rootViewController = vc //4
+//        let vc = MovieCategoriesListViewController() //DZ2
+//        let vc = MovieListViewController() //DZ2
+//        let vc = FavoritesViewController() //DZ3
+//        let vc = TabBarController() //DZ2
+//        let navigationController = UINavigationController(rootViewController: vc)
+//        window?.rootViewController = navigationController //4
+//        window?.rootViewController = vc //4
+        
+        let navVC = UINavigationController()
+        let router = Router(navigationController: navVC)
+        
+        window?.rootViewController = navVC
         window?.makeKeyAndVisible() //5
+        
+        router.setStartScreen(in: window)
+        
+        
         
     }
 

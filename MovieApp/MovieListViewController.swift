@@ -11,8 +11,19 @@ class MovieListViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var collectionCellHeight: Int = 142
     
+    private var router: RouterProtocol!
+    convenience init(router: RouterProtocol) {
+        self.init()
+        self.router = router
+    }
+    
+    @objc func handleGoToYellowControllerButton() {
+            router.showMovieDetailsViewController()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+//        navigationItem.title = "Movie list"
         buildViews()
         loadData()
     }
