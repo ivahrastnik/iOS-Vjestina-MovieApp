@@ -10,17 +10,23 @@ class Router: RouterProtocol {
     private var tabBarController: UITabBarController!
     private var movieListVC: MovieCategoriesListViewController!
     private var favoritesVC: FavoritesViewController!
-    
+    private let movieUseCase: MovieUseCase!
     
     init(navigationController: UINavigationController) {
         self.navigationController = navigationController
+        self.movieUseCase = MovieUseCase()
     }
     func setStartScreen(in window: UIWindow?) {
-        movieListVC = MovieCategoriesListViewController(router: self)
-        favoritesVC = FavoritesViewController()
+        
+        movieListVC = MovieCategoriesListViewController(router: self, movieCategoriesListViewModel: MovieCategoriesListViewModel(movieUseCase: movieUseCase))
+        
+        favoritesVC = FavoritesViewController(favoritesViewModel: FavoritesViewModel())
+        
         tabBarController = UITabBarController()
         
         styleControllers()
+        
+        navigationController.pushViewController(movieListVC, animated: false)
         
         tabBarController.viewControllers = [navigationController, favoritesVC]
         
@@ -29,7 +35,6 @@ class Router: RouterProtocol {
     }
     func styleControllers() {
         movieListVC.navigationItem.title = "Movie list"
-        navigationController.pushViewController(movieListVC, animated: false)
         
         let home = UIImage(systemName: "house")
         movieListVC.tabBarItem = UITabBarItem(title: "Movie List", image: .some(home!), selectedImage: .some(home!))
@@ -41,7 +46,7 @@ class Router: RouterProtocol {
         
     }
     func showMovieDetailsViewController(movieId: Int) {
-        let vc = MovieDetailsViewController(router: self, movieId: movieId)
+        let vc = MovieDetailsViewController(router: self, movieDetailsViewModel: MovieDetailsViewModel(id: movieId, movieUseCase: movieUseCase))
         vc.navigationItem.title = "Movie details"
         navigationController.pushViewController(vc, animated: true)
     }

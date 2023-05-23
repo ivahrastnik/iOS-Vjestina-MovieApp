@@ -77,7 +77,6 @@ extension ListCell {
         summaryView.numberOfLines = 0
         summaryView.lineBreakMode = .byWordWrapping
         
-        
     }
 
     private func defineLayout() {

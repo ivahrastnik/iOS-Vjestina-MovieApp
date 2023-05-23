@@ -14,7 +14,7 @@ class CollectionCell: UITableViewCell {
     private let imageWidth: CGFloat = 122
     private let imageHeight: CGFloat = 179
     
-    private var movies: [MovieModel] = []
+    private var movies: [MovieListModel] = []
     var tapOnMovieCell: ((Int) -> Void)?
     private var router: RouterProtocol!
     
@@ -31,7 +31,7 @@ class CollectionCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func set(title: String, movies: [MovieModel]) {
+    func set(title: String, movies: [MovieListModel]) {
         titleView.text = title
         self.movies = movies
         collectionView.reloadData()

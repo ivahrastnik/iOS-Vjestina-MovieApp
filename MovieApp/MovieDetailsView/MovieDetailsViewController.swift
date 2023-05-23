@@ -3,18 +3,18 @@ import UIKit
 import PureLayout
 import MovieAppData
 import Kingfisher
+import Combine
 
 class MovieDetailsViewController: UIViewController {
     
     private var screenHeight: CGFloat {
-        return UIScreen.main.bounds.height
+        UIScreen.main.bounds.height
     }
     
     private var screenWidth: CGFloat {
-        return UIScreen.main.bounds.width
+        UIScreen.main.bounds.width
     }
     
-    private var details: MovieDetailsModel!
     private var movieView1: UIView!
     private var movieView2: UIView!
     
@@ -50,15 +50,25 @@ class MovieDetailsViewController: UIViewController {
     
     private var router: RouterProtocol!
     private var movieId: Int!
-    convenience init(router: RouterProtocol, movieId: Int) {
-        self.init()
+    
+    private var movieDetailsViewModel: MovieDetailsViewModel!
+    private var disposeables = Set<AnyCancellable>()
+    private var movieDetails: MovieDetailsModel = MovieDetailsModel()
+    
+    init(router: RouterProtocol, movieDetailsViewModel: MovieDetailsViewModel) {
+        self.movieDetailsViewModel = movieDetailsViewModel
         self.router = router
-        self.movieId = movieId
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
-        details = MovieUseCase().getDetails(id: movieId)!
+//        movieDetails = MovieUseCase().getDetails(id: movieId)!
         buildViews()
+        loadData()
     }
     
     override func viewDidLayoutSubviews() {
@@ -90,6 +100,20 @@ class MovieDetailsViewController: UIViewController {
             })
     }
     
+    private func loadData() {
+        movieDetailsViewModel.getMovieDetails()
+                
+        movieDetailsViewModel
+            .$movieDetails
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] movie in
+                guard let self = self else { return }
+                self.movieDetails = movie
+                self.fillViewsWithData()
+            }
+            .store(in: &disposeables)
+    }
+    
     private func buildViews() {
         createViews()
         styleViews()
@@ -97,9 +121,7 @@ class MovieDetailsViewController: UIViewController {
     }
     
     private func createViews(){
-        
         imgView = UIImageView()
-        imgView.kf.setImage(with: URL(string: details.imageUrl))
         imageHeight = (327/852)*screenHeight
         
         animatedTitleView = UIView()
@@ -159,13 +181,11 @@ class MovieDetailsViewController: UIViewController {
     }
     
     private func styleViews() {
-        
         view.backgroundColor = .white
         
         label.textColor = .black
         label.font = UIFont(name: "ProximaNova-Bold", size: 20)
         label.textAlignment = .left
-        label.text = "Overview"
         label.backgroundColor = .white
         
         textBox.textColor = .black
@@ -174,59 +194,25 @@ class MovieDetailsViewController: UIViewController {
         
         textBox.numberOfLines = 0
         textBox.lineBreakMode = .byWordWrapping
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineHeightMultiple = 1.4
-        textBox.attributedText = NSMutableAttributedString(string: details.summary, attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
         
         score.textColor = .white
         score.font = UIFont(name: "ProximaNova-ExtraBold", size: 16)
-        score.text = NumberFormatter.localizedString(from: NSNumber(value: details.rating), number: .decimal)
         
         scoreLabel.textColor = .white
         scoreLabel.font = UIFont(name: "ProximaNova-SemiBold", size: 14)
-        scoreLabel.text = "User score"
         
         titleText.font = UIFont(name: "ProximaNova-Bold", size: 22)
         titleYear.font = UIFont(name: "ProximaNova-Regular", size: 22)
-        titleText.text = details.name
-        var title2 = " ("
-        title2 += NumberFormatter.localizedString(from: NSNumber(value: details.year), number: .none)
-        title2 += ")"
-        titleYear.text = title2
+        
         titleText.textColor = .white
         titleYear.textColor = .white
         
         dateLabel.textColor = .white
         dateLabel.font = UIFont(name: "ProximaNova-Regular", size: 14)
         
-        let outputFormatter = DateFormatter()
-        outputFormatter.dateFormat = "yyyy-MM-dd"
-        let release = details.releaseDate
-        let showDate = outputFormatter.date(from: release)!
-        outputFormatter.dateFormat = "dd/MM/yyyy"
-        var date = outputFormatter.string(from: showDate)
-        date += " (US)"
-        dateLabel.text = date
-        
-        let categories = details.categories
-        var categoriesText = ""
-        for c in categories {
-            categoriesText += String(describing: c.self).capitalized + ", "
-        }
-        
-        genreText.text = String(categoriesText.dropLast(2))
         genreText.textColor = .white
         genreText.font = UIFont(name: "ProximaNova-Regular", size: 14)
         
-        let duration = details.duration
-        let hours = duration / 60
-        let minutes = duration % 60
-        var d = String(" ")
-        d += NumberFormatter.localizedString(from: NSNumber(value: hours ), number: .none)
-        d += "h "
-        d += NumberFormatter.localizedString(from: NSNumber(value: minutes ), number: .none)
-        d += "m"
-        durationText.text = d
         durationText.textColor = .white
         durationText.font = UIFont(name: "ProximaNova-Bold", size: 14)
         
@@ -246,6 +232,52 @@ class MovieDetailsViewController: UIViewController {
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
         collectionView.dataSource = self
         collectionView.delegate = self
+    }
+    
+    private func fillViewsWithData(){
+        imgView.kf.setImage(with: URL(string: movieDetails.imageUrl))
+        label.text = "Overview"
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineHeightMultiple = 1.4
+        textBox.attributedText = NSMutableAttributedString(string: movieDetails.summary, attributes: [NSAttributedString.Key.paragraphStyle: paragraphStyle])
+        
+        scoreLabel.text = "User score"
+        score.text = NumberFormatter.localizedString(from: NSNumber(value: movieDetails.rating), number: .decimal)
+        
+        titleText.text = movieDetails.name
+        var title2 = " ("
+        title2 += NumberFormatter.localizedString(from: NSNumber(value: movieDetails.year), number: .none)
+        title2 += ")"
+        titleYear.text = title2
+        
+        let outputFormatter = DateFormatter()
+        outputFormatter.dateFormat = "yyyy-MM-dd"
+        let release = movieDetails.releaseDate
+        let showDate = outputFormatter.date(from: release)!
+        outputFormatter.dateFormat = "dd/MM/yyyy"
+        var date = outputFormatter.string(from: showDate)
+        date += " (US)"
+        dateLabel.text = date
+        
+        let categories = movieDetails.categories
+        var categoriesText = ""
+        for c in categories {
+            categoriesText += String(describing: c.self).capitalized + ", "
+        }
+        genreText.text = String(categoriesText.dropLast(2))
+        
+        let duration = movieDetails.duration
+        let hours = duration / 60
+        let minutes = duration % 60
+        var d = String(" ")
+        d += NumberFormatter.localizedString(from: NSNumber(value: hours ), number: .none)
+        d += "h "
+        d += NumberFormatter.localizedString(from: NSNumber(value: minutes ), number: .none)
+        d += "m"
+        durationText.text = d
+        
+        collectionView.reloadData()
     }
     
     private func defineLayoutForViews(){
@@ -332,6 +364,7 @@ class MovieDetailsViewController: UIViewController {
         collectionView.autoPinEdge(toSuperviewEdge: .trailing)
         collectionView.autoPinEdge(toSuperviewEdge: .bottom)
     }
+    
     func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
         URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
     }
@@ -343,18 +376,18 @@ extension MovieDetailsViewController: UICollectionViewDataSource {
         
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return Int(details.crewMembers.count)
+        return Int(movieDetails.crewMembers.count)
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         self.collectionView.register(PersonCell.self, forCellWithReuseIdentifier: "personCell")
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PersonCell.reuseIdentifier, for: indexPath)
                 as? PersonCell,
-            details.crewMembers.count > indexPath.item
+            movieDetails.crewMembers.count > indexPath.item
                 
         else { return UICollectionViewCell() }
-        cell.setName(name: String(details.crewMembers[indexPath.row].name))
-        cell.setRole(role: String(details.crewMembers[indexPath.row].role))
+        cell.setName(name: String(movieDetails.crewMembers[indexPath.row].name))
+        cell.setRole(role: String(movieDetails.crewMembers[indexPath.row].role))
         return cell
     }
 }

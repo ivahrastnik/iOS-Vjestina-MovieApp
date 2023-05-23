@@ -3,19 +3,30 @@ import UIKit
 import PureLayout
 import MovieAppData
 import Kingfisher
+import Combine
 
 class MovieListViewController: UIViewController {
     
-    private var allMovies: [MovieModel] = []
+//    private var allMovies: [MovieModel] = []
     private var flowLayout: UICollectionViewFlowLayout!
     private var collectionView: UICollectionView!
     private var collectionCellHeight: Int = 142
     
+    private var movieListViewModel: MovieListViewModel!
+    private var allMovies: [MovieListModel] = []
+    private var disposeables = Set<AnyCancellable>()
+    
     private var router: RouterProtocol!
-    convenience init(router: RouterProtocol) {
-        self.init()
+    init(router: RouterProtocol, movieListViewModel: MovieListViewModel) {
+        super.init(nibName: nil, bundle: nil)
         self.router = router
+        self.movieListViewModel = movieListViewModel
     }
+    
+    required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+    }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,10 +45,23 @@ class MovieListViewController: UIViewController {
     }
     
     private func loadData() {
-        DispatchQueue.main.asyncAfter(deadline: .now()) {
-            self.allMovies = MovieUseCase().allMovies
-            self.collectionView.reloadData()
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now()) {
+//            self.allMovies = MovieUseCase().getAllMovies()
+//            self.collectionView.reloadData()
+//        }
+        
+        movieListViewModel.getAllMovies()
+        
+        movieListViewModel
+                .$allMovies
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] allMovies in
+                    guard let self = self else { return }
+                    
+                    self.allMovies = allMovies
+                    self.collectionView.reloadData()
+                }
+                .store(in: &disposeables)
     }
 
     private func createViews() {
@@ -84,9 +108,8 @@ extension MovieListViewController: UICollectionViewDataSource {
         print("DEBUG: cellForItemAt: \(indexPath)")
         
         let movie = allMovies[indexPath.row]
-        let year = (MovieUseCase().getDetails(id: movie.id)?.year) ?? 0
-        cell.set(name: movie.name, summary: movie.summary, imageUrl: movie.imageUrl, year: year)
-        
+//        let year = (MovieUseCase().getDetails(id: movie.id)?.year) ?? 0
+        cell.set(name: movie.name, summary: movie.summary, imageUrl: movie.imageUrl, year: movie.year)
         
         return cell
     }
