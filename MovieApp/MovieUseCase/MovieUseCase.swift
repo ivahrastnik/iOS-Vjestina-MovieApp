@@ -2,25 +2,16 @@ import Foundation
 
 class MovieUseCase {
     
-    private let key = String("Bearer Zpu7bOQYLNiCkT32V3c9BPoxDMfxisPAfevLW6ps")
-    
-    private func urlRequest(for urlString: String) -> URLRequest? {
-            guard let url = URL(string: urlString)
-            else { return nil }
-            
-            var request = URLRequest(url: url)
-            request.setValue(key, forHTTPHeaderField: "Authorization")
-            
-            return request
-    }
-    
     func getPopularMovies(criteria: String) async -> [MovieListModel] {
         guard let request = urlRequest(for: "https://five-ios-api.herokuapp.com/api/v1/movie/popular?criteria=\(criteria)")
-        else { return [] }
-            
+        else {
+            print("greska p")
+            return [] }
+        print("m")
         async let (data, _) = try await URLSession.shared.data(for: request)
+        print("m1")
         let movies = try? await JSONDecoder().decode([MovieListModel].self, from: data)
-
+        print("m2")
         return movies ?? []
     }
     
@@ -53,5 +44,14 @@ class MovieUseCase {
             let movies = try? await JSONDecoder().decode(MovieDetailsModel.self, from: data)
 
             return movies ?? nil
-        }
+    }
+    
+    private func urlRequest(for urlString: String) -> URLRequest? {
+            guard let url = URL(string: urlString)
+            else { return nil }
+            
+            var request = URLRequest(url: url)
+            request.setValue("Bearer Zpu7bOQYLNiCkT32V3c9BPoxDMfxisPAfevLW6ps", forHTTPHeaderField: "Authorization")
+            return request
+    }
 }
