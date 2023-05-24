@@ -1,7 +1,6 @@
 import Foundation
 import UIKit
 import PureLayout
-import MovieAppData
 import Kingfisher
 import Combine
 
@@ -29,8 +28,6 @@ class MovieCategoriesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         loadData()
-        print(movieCategories)
-        print(self.movieCategories)
         buildViews()
     }
     
@@ -60,10 +57,6 @@ class MovieCategoriesListViewController: UIViewController {
     }
     
     private func loadData() {
-//        movieCategories = [[MovieModel]] ()
-//        movieCategories.append(MovieUseCase().popularMovies)
-//        movieCategories.append(MovieUseCase().freeToWatchMovies)
-//        movieCategories.append(MovieUseCase().trendingMovies)
         movieCategoriesListViewModel.getMovieCategories()
                 
         movieCategoriesListViewModel
@@ -81,11 +74,8 @@ class MovieCategoriesListViewController: UIViewController {
 }
     
 extension MovieCategoriesListViewController: UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return numberOfMovieCategories
+        return movieCategories.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         

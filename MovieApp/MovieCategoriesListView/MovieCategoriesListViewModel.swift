@@ -1,10 +1,3 @@
-//
-//  MovieCategoriesListViewModel.swift
-//  MovieApp
-//
-//  Created by endava-bootcamp on 23.05.2023..
-//
-
 import Foundation
 
 class MovieCategoriesListViewModel {
@@ -17,9 +10,7 @@ class MovieCategoriesListViewModel {
     }
     
     func getMovieCategories() {
-        print("hej")
         Task {
-            print("helo")
             var popularMovies = await movieUseCase.getPopularMovies(criteria: "FOR_RENT")
             print(popularMovies[0].id)
             popularMovies.append(contentsOf: await movieUseCase.getPopularMovies(criteria: "IN_THEATERS"))
@@ -37,6 +28,4 @@ class MovieCategoriesListViewModel {
             print(movieCategories)
         }
     }
-    
-    
 }

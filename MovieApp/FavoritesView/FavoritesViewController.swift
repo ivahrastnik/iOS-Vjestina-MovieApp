@@ -38,5 +38,4 @@ class FavoritesViewController: UIViewController {
     }
     
     private func defineLayoutForViews(){}
-    
 }

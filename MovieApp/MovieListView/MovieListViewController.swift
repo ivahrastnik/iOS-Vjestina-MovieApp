@@ -7,7 +7,6 @@ import Combine
 
 class MovieListViewController: UIViewController {
     
-//    private var allMovies: [MovieModel] = []
     private var flowLayout: UICollectionViewFlowLayout!
     private var collectionView: UICollectionView!
     private var collectionCellHeight: Int = 142
@@ -27,7 +26,6 @@ class MovieListViewController: UIViewController {
             fatalError("init(coder:) has not been implemented")
     }
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         buildViews()
@@ -45,11 +43,6 @@ class MovieListViewController: UIViewController {
     }
     
     private func loadData() {
-//        DispatchQueue.main.asyncAfter(deadline: .now()) {
-//            self.allMovies = MovieUseCase().getAllMovies()
-//            self.collectionView.reloadData()
-//        }
-        
         movieListViewModel.getAllMovies()
         
         movieListViewModel
@@ -90,10 +83,6 @@ class MovieListViewController: UIViewController {
 
 extension MovieListViewController: UICollectionViewDataSource {
     
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        1
-    }
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         allMovies.count
     }
@@ -108,7 +97,6 @@ extension MovieListViewController: UICollectionViewDataSource {
         print("DEBUG: cellForItemAt: \(indexPath)")
         
         let movie = allMovies[indexPath.row]
-//        let year = (MovieUseCase().getDetails(id: movie.id)?.year) ?? 0
         cell.set(name: movie.name, summary: movie.summary, imageUrl: movie.imageUrl, year: movie.year)
         
         return cell

@@ -1,7 +1,6 @@
 import UIKit
 import PureLayout
 import Kingfisher
-import MovieAppData
 
 class CollectionCell: UITableViewCell {
 
@@ -35,7 +34,6 @@ class CollectionCell: UITableViewCell {
         titleView.text = title
         self.movies = movies
         collectionView.reloadData()
-    
     }
 }
 

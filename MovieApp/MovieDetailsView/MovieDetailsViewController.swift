@@ -1,7 +1,6 @@
 import Foundation
 import UIKit
 import PureLayout
-import MovieAppData
 import Kingfisher
 import Combine
 
@@ -66,7 +65,6 @@ class MovieDetailsViewController: UIViewController {
     }
     
     override func viewDidLoad() {
-//        movieDetails = MovieUseCase().getDetails(id: movieId)!
         buildViews()
         loadData()
     }
@@ -254,11 +252,12 @@ class MovieDetailsViewController: UIViewController {
         let outputFormatter = DateFormatter()
         outputFormatter.dateFormat = "yyyy-MM-dd"
         let release = movieDetails.releaseDate
-        let showDate = outputFormatter.date(from: release)!
-        outputFormatter.dateFormat = "dd/MM/yyyy"
-        var date = outputFormatter.string(from: showDate)
-        date += " (US)"
-        dateLabel.text = date
+        if let showDate = outputFormatter.date(from: release){
+            outputFormatter.dateFormat = "dd/MM/yyyy"
+            var date = outputFormatter.string(from: showDate)
+            date += " (US)"
+            dateLabel.text = date
+        }
         
         let categories = movieDetails.categories
         var categoriesText = ""
@@ -371,10 +370,6 @@ class MovieDetailsViewController: UIViewController {
 }
 
 extension MovieDetailsViewController: UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-        
-    }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return Int(movieDetails.crewMembers.count)
     }

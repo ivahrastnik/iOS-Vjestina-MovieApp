@@ -1,6 +1,5 @@
 import Foundation
 
-
 class MovieListViewModel {
     
     @Published var allMovies: [MovieListModel] = []
