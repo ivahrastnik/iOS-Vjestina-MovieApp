@@ -15,12 +15,18 @@ class CollectionCell: UITableViewCell {
     private let imageHeight: CGFloat = 179
     
     private var movies: [MovieModel] = []
+    var tapOnMovieCell: ((Int) -> Void)?
+    private var router: RouterProtocol!
+    
+    convenience init(router: RouterProtocol) {
+        self.init()
+        self.router = router
+    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         buildViews()
     }
-
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -104,5 +110,13 @@ extension CollectionCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout:
                         UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: imageWidth, height: imageHeight)
+    }
+}
+
+extension CollectionCell: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let movie = movies[indexPath.row]
+        let movieId = movie.id
+        tapOnMovieCell?(movieId)
     }
 }

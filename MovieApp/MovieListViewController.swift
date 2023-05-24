@@ -11,6 +11,12 @@ class MovieListViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var collectionCellHeight: Int = 142
     
+    private var router: RouterProtocol!
+    convenience init(router: RouterProtocol) {
+        self.init()
+        self.router = router
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         buildViews()
@@ -44,12 +50,12 @@ class MovieListViewController: UIViewController {
         view.addSubview(collectionView)
         
         collectionView.register(ListCell.self, forCellWithReuseIdentifier: ListCell.reuseIdentifier)
+        collectionView.dataSource = self
+        collectionView.delegate = self
     }
     
     private func styleViews() {
         view.backgroundColor = .white
-        collectionView.dataSource = self
-        collectionView.delegate = self
     }
 
     private func defineLayoutForViews() {
@@ -81,6 +87,7 @@ extension MovieListViewController: UICollectionViewDataSource {
         let year = (MovieUseCase().getDetails(id: movie.id)?.year) ?? 0
         cell.set(name: movie.name, summary: movie.summary, imageUrl: movie.imageUrl, year: year)
         
+        
         return cell
     }
 }
@@ -93,4 +100,13 @@ extension MovieListViewController: UICollectionViewDelegateFlowLayout {
         let collectionCellWidth = (Int(collectionView.bounds.width) - emptySpace)
         return CGSize(width: collectionCellWidth, height: collectionCellHeight)
     }
+}
+
+extension MovieListViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let movie = allMovies[indexPath.row]
+        router.showMovieDetailsViewController(movieId: movie.id)
+    }
+    
 }

@@ -4,7 +4,7 @@ import PureLayout
 import MovieAppData
 import Kingfisher
 
-class PopularMoviesViewController: UIViewController {
+class MovieCategoriesListViewController: UIViewController {
     
     private var tableView: UITableView!
     private var movieCategories: [[MovieModel]]!
@@ -12,12 +12,14 @@ class PopularMoviesViewController: UIViewController {
     private let tableViewCellHeight: CGFloat = 263
     private let numberOfMovieCategories: Int = 3
     
+    private var router: RouterProtocol!
+    convenience init(router: RouterProtocol) {
+        self.init()
+        self.router = router
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        tableView = UITableView()
-        view.addSubview(tableView)
-        tableView.dataSource = self
         buildViews()
         loadData()
     }
@@ -29,10 +31,14 @@ class PopularMoviesViewController: UIViewController {
     }
     
     private func createViews() {
+        tableView = UITableView()
+        view.addSubview(tableView)
+        tableView.dataSource = self
         tableView.register(CollectionCell.self, forCellReuseIdentifier: "CollectionCell")
     }
     
     private func styleViews() {
+        view.backgroundColor = .white
         tableView.separatorStyle = .none
     }
     
@@ -53,7 +59,7 @@ class PopularMoviesViewController: UIViewController {
     }
 }
     
-extension PopularMoviesViewController: UITableViewDataSource {
+extension MovieCategoriesListViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -72,6 +78,10 @@ extension PopularMoviesViewController: UITableViewDataSource {
         
         let categoryId = indexPath.row
         cell.set(title: titleCategories[categoryId], movies: movieCategories[categoryId])
+        
+        cell.tapOnMovieCell = {
+            [weak self] (id: Int) in self?.router.showMovieDetailsViewController(movieId: id)
+        }
         
         return cell
     }
