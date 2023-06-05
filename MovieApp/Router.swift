@@ -5,7 +5,7 @@ protocol RouterProtocol {
     func setStartScreen(in window: UIWindow?)
     func showMovieDetailsViewController(movieId: Int)
 }
-class Router: RouterProtocol {
+class Router: RouterProtocol {  
     private let navigationController: UINavigationController!
     private var tabBarController: UITabBarController!
     private var movieListVC: MovieCategoriesListViewController!

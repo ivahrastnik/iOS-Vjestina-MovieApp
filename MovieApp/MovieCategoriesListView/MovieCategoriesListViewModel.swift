@@ -12,7 +12,6 @@ class MovieCategoriesListViewModel {
     func getMovieCategories() {
         Task {
             var popularMovies = await movieUseCase.getPopularMovies(criteria: "FOR_RENT")
-            print(popularMovies[0].id)
             popularMovies.append(contentsOf: await movieUseCase.getPopularMovies(criteria: "IN_THEATERS"))
             popularMovies.append(contentsOf: await movieUseCase.getPopularMovies(criteria: "ON_TV"))
             popularMovies.append(contentsOf: await movieUseCase.getPopularMovies(criteria: "STREAMING"))
@@ -22,10 +21,8 @@ class MovieCategoriesListViewModel {
                        
             var trendingMovies = await movieUseCase.getTrendingMovies(criteria: "THIS_WEEK")
             trendingMovies.append(contentsOf: await movieUseCase.getTrendingMovies(criteria: "TODAY"))
-            print("w")
-            print(trendingMovies)
+            
             self.movieCategories = [popularMovies, freeToWatchMovies, trendingMovies]
-            print(movieCategories)
         }
     }
 }

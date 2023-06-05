@@ -5,11 +5,12 @@ class MovieUseCase {
     func getPopularMovies(criteria: String) async -> [MovieListModel] {
         guard let request = urlRequest(for: "https://five-ios-api.herokuapp.com/api/v1/movie/popular?criteria=\(criteria)")
         else { return [] }
-        
-        async let (data, _) = try await URLSession.shared.data(for: request)
-        let movies = try? await JSONDecoder().decode([MovieListModel].self, from: data)
-        
-        return movies ?? []
+        let response = try? await URLSession.shared.data(for: request)
+                guard
+                    let data = response?.0,
+                    let movies = try? JSONDecoder().decode([MovieListModel].self, from: data)
+                else { return [] }
+                return movies
     }
     
     func getTrendingMovies(criteria: String) async -> [MovieListModel] {
