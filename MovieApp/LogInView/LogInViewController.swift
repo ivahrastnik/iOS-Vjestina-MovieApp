@@ -102,11 +102,9 @@ class LogInViewController: UIViewController {
         
         let paddingView2 = UIView(frame: CGRectMake(12, 12, 16, 0))
         
-        // padding of 16px for input text and placeholder
         passwordInputTextField.leftView = paddingView2
         passwordInputTextField.leftViewMode = UITextField.ViewMode.always
 
-        // placeholder
         passwordInputTextField.attributedPlaceholder = NSAttributedString(
             string: "Password",
             attributes: [NSAttributedString.Key.foregroundColor: Colors.lightBlue]

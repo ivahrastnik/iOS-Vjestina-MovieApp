@@ -1,27 +1,34 @@
 import Foundation
 import UIKit
 import PureLayout
-import MovieAppData
 import Kingfisher
+import Combine
 
 class MovieCategoriesListViewController: UIViewController {
     
     private var tableView: UITableView!
-    private var movieCategories: [[MovieModel]]!
     private var titleCategories: [String]!
     private let tableViewCellHeight: CGFloat = 263
     private let numberOfMovieCategories: Int = 3
+    private var movieCategoriesListViewModel: MovieCategoriesListViewModel!
+    private var disposeables = Set<AnyCancellable>()
+    private var movieCategories: [[MovieListModel]] = []
     
     private var router: RouterProtocol!
-    convenience init(router: RouterProtocol) {
-        self.init()
+    init(router: RouterProtocol, movieCategoriesListViewModel: MovieCategoriesListViewModel) {
+        self.movieCategoriesListViewModel = movieCategoriesListViewModel
         self.router = router
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        buildViews()
         loadData()
+        buildViews()
     }
     
     private func buildViews() {
@@ -50,21 +57,25 @@ class MovieCategoriesListViewController: UIViewController {
     }
     
     private func loadData() {
-        movieCategories = [[MovieModel]] ()
-        movieCategories.append(MovieUseCase().popularMovies)
-        movieCategories.append(MovieUseCase().freeToWatchMovies)
-        movieCategories.append(MovieUseCase().trendingMovies)
+        movieCategoriesListViewModel.getMovieCategories()
+                
+        movieCategoriesListViewModel
+            .$movieCategories
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] movies in
+                guard let self = self else { return }
+                
+                self.movieCategories = movies
+                self.tableView.reloadData()
+            }
+            .store(in: &disposeables)
         titleCategories = ["What's popular", "Free to watch", "Trending"]
-        self.tableView.reloadData()
     }
 }
     
 extension MovieCategoriesListViewController: UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return numberOfMovieCategories
+        return movieCategories.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
@@ -77,6 +88,7 @@ extension MovieCategoriesListViewController: UITableViewDataSource {
         print("DEBUG: cellForItemAt: \(indexPath)")
         
         let categoryId = indexPath.row
+        print(movieCategories)
         cell.set(title: titleCategories[categoryId], movies: movieCategories[categoryId])
         
         cell.tapOnMovieCell = {
