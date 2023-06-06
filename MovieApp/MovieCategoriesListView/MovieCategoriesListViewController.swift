@@ -87,7 +87,6 @@ extension MovieCategoriesListViewController: UITableViewDataSource {
                 as? CollectionCell,
             3 > indexPath.item
         else { return UITableViewCell() }
-        print("DEBUG: cellForItemAt: \(indexPath)")
         
         let categoryId = indexPath.row
         cell.set(title: titleCategories[categoryId], movies: movieCategories[categoryId], categories: subCategories[categoryId])

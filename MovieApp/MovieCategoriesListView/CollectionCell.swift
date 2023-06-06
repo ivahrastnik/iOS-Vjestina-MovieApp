@@ -67,7 +67,6 @@ extension CollectionCell {
         contentView.addSubview(titleView)
         
         categoriesView = UIView()
-//        contentView.addSubview(categoriesView)
         
         catLabel = UILabel()
         contentView.addSubview(catLabel)
@@ -141,7 +140,6 @@ extension CollectionCell: UICollectionViewDataSource {
         let movie = movies[indexPath.row]
         let movieId = movie.id
         let movieURL = URL(string: movie.imageUrl)
-        let heartImage = getHeartImage(for: movieId)
         
         cell.configure(with: movieURL, movieId: movieId) {
               guard let favoriteMovies = Defaults.favoriteMoviesIds else { return }
