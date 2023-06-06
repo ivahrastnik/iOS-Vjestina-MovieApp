@@ -20,7 +20,7 @@ class Router: RouterProtocol {
         
         movieListVC = MovieCategoriesListViewController(router: self, movieCategoriesListViewModel: MovieCategoriesListViewModel(movieUseCase: movieUseCase))
         
-        favoritesVC = FavoritesViewController(favoritesViewModel: FavoritesViewModel())
+        favoritesVC = FavoritesViewController(router: self, favoritesViewModel: FavoritesViewModel(movieUseCase: movieUseCase))
         
         tabBarController = UITabBarController()
         
