@@ -2,20 +2,28 @@ import UIKit
 import PureLayout
 import Kingfisher
 
+protocol CollectionCellDelegate: AnyObject {
+    func tapOnMovieCell(id: Int)
+}
+
 class CollectionCell: UITableViewCell {
 
     static let reuseIdentifier = String(describing: CollectionCell.self)
 
     private var titleView: UILabel!
+    private var categoriesView: UIView!
     private var flowLayout: UICollectionViewFlowLayout!
     private var collectionView: UICollectionView!
     private let titleOffset: CGFloat = 16
     private let imageWidth: CGFloat = 122
     private let imageHeight: CGFloat = 179
+    private var catLabel: UILabel!
     
     private var movies: [MovieListModel] = []
+    private var categories: [String] = []
     var tapOnMovieCell: ((Int) -> Void)?
     private var router: RouterProtocol!
+    weak var delegate: CollectionCellDelegate?
     
     convenience init(router: RouterProtocol) {
         self.init()
@@ -30,9 +38,18 @@ class CollectionCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func set(title: String, movies: [MovieListModel]) {
+    func set(title: String, movies: [MovieListModel], categories: [String]) {
         titleView.text = title
+        
         self.movies = movies
+        
+        var text = String("")
+        for c in categories {
+            text.append(c)
+            text.append("   ")
+        }
+        catLabel.text = text
+        
         collectionView.reloadData()
     }
 }
@@ -48,6 +65,11 @@ extension CollectionCell {
     private func createViews() {
         titleView = UILabel()
         contentView.addSubview(titleView)
+        
+        categoriesView = UIView()
+        
+        catLabel = UILabel()
+        contentView.addSubview(catLabel)
         
         flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .horizontal
@@ -67,6 +89,11 @@ extension CollectionCell {
         titleView.font = UIFont(name: "ProximaNova-Bold", size: 20)
         titleView.textAlignment = .left
         
+        categoriesView.backgroundColor = .systemMint
+        
+        catLabel.font = UIFont(name: "ProximaNova-Regular", size: 14)
+        catLabel.textColor = Colors.darkGray
+        
         collectionView.dataSource = self
         collectionView.delegate = self
     }
@@ -77,18 +104,30 @@ extension CollectionCell {
         titleView.autoPinEdge(toSuperviewEdge: .leading, withInset: titleOffset)
         titleView.autoPinEdge(toSuperviewEdge: .trailing, withInset: titleOffset)
         
-        collectionView.autoPinEdge(.top, to: .bottom, of: titleView, withOffset: titleOffset)
+        catLabel.autoPinEdge(.top, to: .bottom, of: titleView, withOffset: 8)
+        catLabel.autoPinEdge(toSuperviewEdge: .leading, withInset: titleOffset)
+        catLabel.autoPinEdge(toSuperviewEdge: .trailing, withInset: titleOffset)
+        
+        collectionView.autoPinEdge(.top, to: .bottom, of: catLabel, withOffset: 16)
         collectionView.autoPinEdge(toSuperviewEdge: .leading, withInset: titleOffset)
         collectionView.autoPinEdge(toSuperviewEdge: .trailing)
         collectionView.autoPinEdge(toSuperviewEdge: .bottom, withInset: 40)
+    }
+    
+    private func getHeartImage(for movieId: Int) -> UIImage {
+        if let favoriteIds = Defaults.favoriteMoviesIds {
+          if favoriteIds.contains(movieId) {
+              return UIImage(systemName: "heart.fill")!
+          } else {
+              return UIImage(systemName: "heart")!
+          }
+        }
+        return UIImage(systemName: "heart")!
     }
 
 }
 
 extension CollectionCell: UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return movies.count
     }
@@ -99,7 +138,23 @@ extension CollectionCell: UICollectionViewDataSource {
         print("DEBUG: cellForItemAt: \(indexPath)")
         
         let movie = movies[indexPath.row]
-        cell.setImage(imageUrl: movie.imageUrl)
+        let movieId = movie.id
+        let movieURL = URL(string: movie.imageUrl)
+        
+        cell.configure(with: movieURL, movieId: movieId) {
+              guard let favoriteMovies = Defaults.favoriteMoviesIds else { return }
+              var movieIds = Defaults.favoriteMoviesIds!
+            if favoriteMovies.contains(movieId) {
+                movieIds.removeAll { id in
+                  id == movieId
+                }
+                Defaults.favoriteMoviesIds = movieIds
+              } else {
+                movieIds.append(movieId)
+                Defaults.favoriteMoviesIds = movieIds
+              }
+              collectionView.reloadData()
+        }
         return cell
     }
 }

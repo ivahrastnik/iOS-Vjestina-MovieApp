@@ -8,6 +8,7 @@ class MovieCategoriesListViewController: UIViewController {
     
     private var tableView: UITableView!
     private var titleCategories: [String]!
+    private var subCategories: [[String]]!
     private let tableViewCellHeight: CGFloat = 263
     private let numberOfMovieCategories: Int = 3
     private var movieCategoriesListViewModel: MovieCategoriesListViewModel!
@@ -70,6 +71,7 @@ class MovieCategoriesListViewController: UIViewController {
             }
             .store(in: &disposeables)
         titleCategories = ["What's popular", "Free to watch", "Trending"]
+        subCategories = [["Streaming", "On TV", "For Rent", "In theaters"], ["Movies", "TV"], ["Today", "This week"]]
     }
 }
     
@@ -85,12 +87,9 @@ extension MovieCategoriesListViewController: UITableViewDataSource {
                 as? CollectionCell,
             3 > indexPath.item
         else { return UITableViewCell() }
-        print("DEBUG: cellForItemAt: \(indexPath)")
         
         let categoryId = indexPath.row
-        print(movieCategories)
-        cell.set(title: titleCategories[categoryId], movies: movieCategories[categoryId])
-        
+        cell.set(title: titleCategories[categoryId], movies: movieCategories[categoryId], categories: subCategories[categoryId])
         cell.tapOnMovieCell = {
             [weak self] (id: Int) in self?.router.showMovieDetailsViewController(movieId: id)
         }

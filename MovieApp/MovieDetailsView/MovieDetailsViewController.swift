@@ -35,6 +35,7 @@ class MovieDetailsViewController: UIViewController {
     
     private var iconImage: UIImageView!
     private var iconView: UIView!
+    private var heart: UIButton!
     
     private var label: UILabel!
     private var textBox: UILabel!
@@ -67,11 +68,6 @@ class MovieDetailsViewController: UIViewController {
     override func viewDidLoad() {
         buildViews()
         loadData()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        iconView.layer.cornerRadius = iconView.layer.bounds.width / 2
-        iconView.clipsToBounds = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -110,12 +106,16 @@ class MovieDetailsViewController: UIViewController {
                 self.fillViewsWithData()
             }
             .store(in: &disposeables)
+        
+        movieId = movieDetails.id
     }
     
     private func buildViews() {
         createViews()
         styleViews()
         defineLayoutForViews()
+        addActions()
+        favorites()
     }
     
     private func createViews(){
@@ -156,10 +156,8 @@ class MovieDetailsViewController: UIViewController {
         genreView.addSubview(genreText)
         genreView.addSubview(durationText)
         
-        iconView = UIView()
-        movieView1.addSubview(iconView)
-        iconImage = UIImageView()
-        iconView.addSubview(iconImage)
+        heart = UIButton()
+        movieView1.addSubview(heart)
         
         movieView2 = UIView()
         view.addSubview(movieView2)
@@ -214,11 +212,11 @@ class MovieDetailsViewController: UIViewController {
         durationText.textColor = .white
         durationText.font = UIFont(name: "ProximaNova-Bold", size: 14)
         
-        iconView.backgroundColor = UIColor(red: 0.459, green: 0.459, blue: 0.459, alpha: 1)
-        
-        let icon = UIImage(systemName: "star")
-        iconImage.image = icon
-        iconImage.tintColor = .white
+        heart.tintColor = .white
+        heart.backgroundColor = Colors.iconBackgroundColor
+        heart.layer.cornerRadius = 16
+        heart.setImage(UIImage(systemName: "heart"), for: .normal)
+        heart.setImage(UIImage(systemName: "heart.fill"), for: .selected)
         
         movieView2.backgroundColor = .white
         
@@ -336,14 +334,9 @@ class MovieDetailsViewController: UIViewController {
         durationText.autoPinEdge(toSuperviewEdge: .bottom)
         durationText.autoPinEdge(toSuperviewEdge: .top)
         
-        iconView.autoSetDimension(.height, toSize: 32)
-        iconView.autoSetDimension(.width, toSize: 32)
-        iconView.autoPinEdge(.top, to: .bottom, of: genreView, withOffset: 16)
-        iconView.autoPinEdge(.leading, to: .leading, of: titleLabel)
-        
-        iconImage.autoSetDimension(.height, toSize: 13)
-        iconImage.autoSetDimension(.width, toSize: 14)
-        iconImage.autoCenterInSuperview()
+        heart.autoPinEdge(.top, to: .bottom, of: genreView, withOffset: 16)
+        heart.autoPinEdge(.leading, to: .leading, of: titleLabel)
+        heart.autoSetDimensions(to: CGSize(width: 32, height: 32))
         
         movieView2.autoSetDimension(.height, toSize: screenHeight - imageHeight)
         movieView2.autoPinEdge(.top, to: .bottom, of: movieView1)
@@ -362,6 +355,40 @@ class MovieDetailsViewController: UIViewController {
         collectionView.autoPinEdge(toSuperviewEdge: .leading)
         collectionView.autoPinEdge(toSuperviewEdge: .trailing)
         collectionView.autoPinEdge(toSuperviewEdge: .bottom)
+    }
+    
+    private func favorites() {
+        
+    }
+    
+    private func addActions() {
+        heart.addTarget(self, action: #selector(tap(_:)), for: .touchUpInside)
+    }
+    
+    @objc
+      private func tap(_ sender: UIButton!) {
+          
+          let favIds = Defaults.favoriteMoviesIds
+          let movieId = movieDetails.id
+          if let favIds = favIds {
+              if favIds.contains(movieId) {
+                  heart.isSelected = true
+              } else {
+                  heart.isSelected = false
+              }
+          } else {
+              heart.isSelected = false
+          }
+          
+          heart.isSelected = !heart.isSelected
+          if heart.isSelected {
+              Defaults.favoriteMoviesIds?.append(movieId)
+          } else {
+              let index = Defaults.favoriteMoviesIds?.firstIndex(of: movieId)
+              if let index = index {
+                  Defaults.favoriteMoviesIds?.remove(at: index)
+              }
+          }
     }
     
     func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
